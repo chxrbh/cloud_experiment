@@ -75,8 +75,6 @@
     distributed infrastructures and exposing sensitive industrial data at 
     the fog layer~\cite{mirani2022}.
 
-
-
     Prior work addresses each challenge independently but creates new 
     tradeoffs when combined. Global shared AES key schemes allow 
     efficient key management but mean that a single compromised fog node 
@@ -113,7 +111,7 @@
 
        \section{Related Work}
 
-This section reviews existing literature relevant to the proposed task-aware IIoT fog computing framework across three areas: (A) load balancing in fog environments, (B) fault tolerance mechanisms for distributed fog systems, and (C) privacy-preserving data processing in IIoT and fog computing. For each area, we summarise representative approaches, identify their key limitations, and explain how those limitations motivate the design choices in the proposed framework.
+This section reviews existing literature across three areas: (A) load balancing in fog environments, (B) fault tolerance mechanisms for distributed fog systems, and (C) privacy-preserving data processing in IIoT and fog computing.
 
 \subsection{Load Balancing in Fog Computing}
 
@@ -451,7 +449,7 @@ own sealed fog-scoped key.
     For $k=10$ fog nodes, the table consumes $10\times 28=280$ bytes. On a Cortex-M3 class IIoT sensor with 32~KB RAM, this is less than 1\% of available RAM and remains negligible for the proposed deployment model. No hardware upgrade is required.
 
     \paragraph{Sensor gossip table dissemination.}
-    The edge gateway rebroadcasts a signed summary of the current fog gossip table to all downstream sensors every $T_g = 500\,\text{ms}$. Each 280-byte summary is HMAC-authenticated with the receiving sensor's fog-scoped key $k_{fogI}$, allowing the sensor to verify that the table is fresh and untampered. This dissemination adds one 280-byte broadcast per $T_g$ interval per sensor, corresponding to approximately $0.56\,\text{KB/s}$ at $T_g=500\,\text{ms}$---a negligible overhead on 20~Mbps or higher links. This cost is included in the $1.055\times$ message-overhead figure reported in E6.
+    The edge gateway rebroadcasts an HMAC-authenticated 280-byte gossip summary to downstream sensors every $T_g=500\,\text{ms}$ ($\approx0.56\,\text{KB/s}$, negligible on 20~Mbps or higher links).
 
     \paragraph{Three-layer fault handling hierarchy.}
     The complete fault-handling system uses three layers, each covering failures that the previous layer cannot handle:
@@ -777,20 +775,16 @@ own sealed fog-scoped key.
 
     In both S6 configurations, the compatibility weight $w_4 = 0.45$ is the dominant term, ensuring that structural node suitability drives the selection decision beyond raw load conditions. For LS tasks, $w_2 = 0.35$ gives secondary priority to network latency, since these tasks are delay-critical. For HP tasks, $w_2 = 0.30$ and the $\phi_j^2$ factor inside $compat_{HP}$ applies a strong structural penalty to slow nodes, steering compute-heavy tasks away from nodes that cannot meet their execution deadlines. S4 and S6 weights sum to 1.0; S5 is deliberately a three-term adaptive ranking score with no compatibility term. Raw sensor ciphertexts routed during fault recovery (Layers 2 and 3) use the LS configuration by default, as explained in Section~\ref{sec:lb}.
 
-    The aggregation window is also fixed at $W=500\,ms$, matching the gossip interval $T_g$ but remaining operationally independent from it. Gossip periodically refreshes $LastKnownWorkload$, while the delegation check reads the current table value whenever a sensor ciphertext arrives. Therefore, a reading can be delegated at any time within $t\in[0,W]$ rather than waiting for the next window close.
+    Because gossip refreshes $LastKnownWorkload$ every $T_g$ while delegation is checked on every incoming ciphertext, a reading can be delegated at any time within $t\in[0,W]$ rather than waiting for the next window close.
 
     \subsection{Fault Tolerance Mechanism}
-    Fault tolerance is essential for maintaining the reliability and availability of fog-based systems. Due to the distributed and decentralized nature of fog infrastructures, node failures may occur as a result of hardware malfunctions, unstable network conditions, or temporary resource exhaustion. Such failures can interrupt data processing tasks and degrade the performance of Industrial Internet of Things (IIoT) applications. Therefore, effective fault tolerance mechanisms are required to detect failures and ensure continuous system operation.
-
-    Failures in fog environments occur unpredictably due to the dynamic characteristics of distributed nodes. Previous studies have shown that failure events in fog–cloud infrastructures can be modeled probabilistically to estimate their likelihood over time. In particular, the occurrence of failures can be described using a Poisson distribution \cite{abdelbasset2019fault}, which represents the probability of observing a certain number of failures within a given time interval. The probability of p failures occurring during the time period T can be expressed as
+    Fog node failures are modeled using a Poisson process~\cite{abdelbasset2019fault}. The probability of $p$ failures in interval $T$ is
 
     \begin{equation}
     P(p) = \frac{(\mu T)^p e^{-\mu T}}{p!}
     \end{equation}
 
-    where $\mu$ denotes the average failure rate of a fog node and T represents the observation time interval. This probabilistic model reflects the stochastic nature of node failures in distributed fog environments.
-
-    From the Poisson model, the probability of observing at least one failure event in interval $T$ is
+    where $\mu$ is the average failure rate and $T$ the observation interval. The probability of at least one failure is
 
     \begin{equation}
     P(p \geq 1) = 1 - P(0) = 1 - e^{-\mu T}
@@ -810,17 +804,9 @@ own sealed fog-scoped key.
 
     For $\beta = 0.95$ this gives $T_g \leq \ln(20)/(\mu r)$. In the proposed system, the gossip parameters $r=3$ and $T_g=500\,\text{ms}$ are chosen to bound the worst-case detection delay to $rT_g = 1.5\,\text{s}$; the ACK-redirect path (Phase 4b) reduces effective recovery latency to $150\,\text{ms}$ for the common single-node failure case.
 
-    Several fault tolerance techniques have been proposed in the literature, including task replication, checkpointing, and fault-tolerant scheduling. Replication-based methods create backup copies of tasks across multiple nodes so that computation can continue even when a node fails. Similarly, checkpointing techniques \cite{goswami2004checkpoint} periodically store intermediate execution states, allowing tasks to resume from the last checkpoint rather than restarting from the beginning when failures occur. While these approaches improve system reliability, they often introduce additional storage overhead and computational costs, which may not be suitable for resource-constrained fog environments.
+    The proposed framework uses gossip-based failure detection~\cite{demers1988epidemic}: each fog node broadcasts its status every $T_g=500\,ms$ to $k=3$ randomly selected neighbors and is declared unavailable after $r=3$ consecutive missed rounds ($rT_g=1.5\,s$ worst-case detection). In the event of a network partition, the partitioned node initiates local failover by promoting the highest-scoring known neighbor using the most recently cached CapacityScore (LS-default configuration).
 
-    To address these limitations, the proposed framework adopts a decentralized failure detection mechanism based on the gossip protocol. Gossip-based communication \cite{demers1988epidemic} was originally introduced in epidemic algorithms for distributed database maintenance, where information is propagated among nodes through random pairwise exchanges. In this approach, nodes periodically share their local state with randomly selected neighbors, allowing system information to gradually disseminate throughout the network without relying on centralized control.
-
-    In the proposed system, each fog node broadcasts a gossip message every $T_g = 500\,ms$ to a randomly selected subset of $k = 3$ neighboring nodes. A node is declared unavailable if it fails to respond for $r = 3$ consecutive gossip rounds, corresponding to a worst-case detection latency of $rT_g = 1.5\,s$. Under the Poisson failure-arrival model, the probability that at least one failure arrives within this window is $1-e^{-1.5\mu}$; for example, this reaches $0.95$ when $\mu \geq \ln(20)/1.5 \approx 2.0\,s^{-1}$, meaning detection within one gossip window is near-certain only at very high failure rates.
-
-    In the event of a network partition, a node that cannot reach any neighbor within $r$ rounds initiates local failover by promoting the highest-scoring known neighbor as the delegation target based on the last recorded CapacityScore (using the LS-default configuration, since the partitioned node cannot determine the task type of future arrivals).
-
-    Once a node failure is detected, the system initiates recovery through either sensor-side ACK redirect or gossip-triggered reassignment. ACK redirect sends a redirect notification to the KMM, triggers provisioning of the failed fog node's scoped key to the selected backup enclave, and retransmits new encrypted readings to the backup fog node selected by CapacityScore (S6) with the LS-default weights. Gossip-triggered reassignment promotes the highest-scoring known neighbor under the same S6 LS-default rule and updates the KMM assignment state for subsequent windows. In both cases, encrypted sensor data is processed only by attested fog enclaves, and sealed key material is never exposed to the fog host operating system. If the failed fog node did not deliver its current $C_{agg,F_i}$ before failure, the affected window is explicitly treated as a partial aggregate; subsequent windows are processed by the promoted target node.
-
-    Overall, the integration of probabilistic failure modeling and gossip-based distributed monitoring improves the resilience of the fog-based IIoT architecture. By enabling decentralized failure detection and secure task reassignment, the proposed mechanism ensures stable system operation even when individual fog nodes become unavailable.
+    Once a failure is detected, recovery proceeds through either sensor-side ACK redirect or gossip-triggered reassignment, both using the S6 LS-default selector. In both cases, sealed key material is never exposed to the fog host OS. If the failed node did not deliver $C_{agg,F_i}$ before failure, that window is treated as a partial aggregate; subsequent windows are handled by the promoted target node.
 
     \section{Performance Evaluation}
     \label{sec:evaluation}
