@@ -1,0 +1,8 @@
+k_fog_aggregates,he_additions,combine_latency_ms_median,combine_latency_ms_std,bytes_received,ciphertext_bytes,within_500ms,benchmark_mode,paillier_key_bits,note
+1,0,1.474,0.0,512,512,True,host_reference_2048_no_ta,2048,"2048-bit host reference benchmark; OP-TEE QEMU timing only, not physical hardware timing. TA-side 2048-bit Paillier is not enabled in this QEMU prototype."
+2,1,1.474,0.0,1024,512,True,host_reference_2048_no_ta,2048,"2048-bit host reference benchmark; OP-TEE QEMU timing only, not physical hardware timing. TA-side 2048-bit Paillier is not enabled in this QEMU prototype."
+5,4,1.474,0.0,2560,512,True,host_reference_2048_no_ta,2048,"2048-bit host reference benchmark; OP-TEE QEMU timing only, not physical hardware timing. TA-side 2048-bit Paillier is not enabled in this QEMU prototype."
+10,9,1.474,0.0,5120,512,True,host_reference_2048_no_ta,2048,"2048-bit host reference benchmark; OP-TEE QEMU timing only, not physical hardware timing. TA-side 2048-bit Paillier is not enabled in this QEMU prototype."
+20,19,1.474,0.0,10240,512,True,host_reference_2048_no_ta,2048,"2048-bit host reference benchmark; OP-TEE QEMU timing only, not physical hardware timing. TA-side 2048-bit Paillier is not enabled in this QEMU prototype."
+50,49,1.474,0.0,25600,512,True,host_reference_2048_no_ta,2048,"2048-bit host reference benchmark; OP-TEE QEMU timing only, not physical hardware timing. TA-side 2048-bit Paillier is not enabled in this QEMU prototype."
+100,99,1.474,0.0,51200,512,True,host_reference_2048_no_ta,2048,"2048-bit host reference benchmark; OP-TEE QEMU timing only, not physical hardware timing. TA-side 2048-bit Paillier is not enabled in this QEMU prototype."

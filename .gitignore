@@ -1,0 +1,21 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Tool directories
+.agents/
+.codex/
+.claude/
+
+# Generated / scratch
+results_quick/
+archive/
+
+# LaTeX build artifacts
+LaTex/*.aux
+LaTex/*.log
+
+# Large generated data
+results/e5_task_records.csv
