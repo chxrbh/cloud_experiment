@@ -31,10 +31,7 @@ from config import (
 from crypto_sim import (
     paillier_ciphertext_bytes,
 )
-
-
-def _readings(n: int, rng: random.Random) -> list[float]:
-    return [round(rng.uniform(0, 150), 4) for _ in range(n)]
+from util import _readings
 
 
 def _stage_row_base(window: int, event: str, method: str, n: int, delegation_active: bool) -> dict[str, object]:

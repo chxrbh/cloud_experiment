@@ -8,7 +8,7 @@
     \usepackage{array}
     \usepackage{booktabs}
 
-    \title{Fault-Tolerant and Load-Balanced IIoT Edge--Fog Architecture with TEE-Enforced Key Isolation and Paillier Slot Aggregation}
+    \title{Fault-Tolerant and Load-Balanced IIoT Edge--Fog Architecture}
 
     \author{
     \IEEEauthorblockN{
@@ -59,11 +59,10 @@
     requirements due to the long communication path between sensors and 
     remote data centers. Edge and fog computing have emerged as the 
     dominant solution, moving computation closer to data 
-    sources~\cite{jin2024}. In an edge--fog architecture, edge gateways 
-    perform initial preprocessing near IIoT devices while fog nodes 
-    provide intermediate aggregation and analytics before forwarding 
-    results to the cloud, significantly reducing latency and bandwidth 
-    overhead.
+    sources~\cite{jin2024}. In an edge--fog architecture, fog nodes
+    perform preprocessing near IIoT devices and provide intermediate
+    aggregation and analytics before forwarding results to the cloud,
+    significantly reducing latency and bandwidth overhead.
 
     Despite these advantages, fog-based IIoT deployments face three 
     critical challenges. First, heterogeneous fog nodes subject to static 
@@ -121,7 +120,7 @@ Load balancing in fog computing is concerned with distributing incoming workload
 
 Early optimisation-based methods applied metaheuristics such as Particle Swarm Optimisation and Ant Colony Optimisation to allocate workflows across fog nodes~\cite{tripathy2026}. The FOCALB architecture combined fitness-based node selection with fog-aware scheduling to reduce execution time and energy consumption for scientific workflow applications~\cite{kaur2021}. While FOCALB demonstrated the value of capacity-aware routing, it targets batch workflows rather than the continuous, high-frequency sensor streams characteristic of IIoT deployments, and provides no mechanism for differentiating among task types with heterogeneous computational profiles.
 
-Multi-criteria decision-making frameworks extended optimisation approaches by jointly evaluating CPU load, network latency, and queue depth. Ebrahim and Hafid proposed an ELECTRE-based outranking method that ranks fog nodes by pairwise concordance and discordance across multiple criteria~\cite{ebrahim2023b}. Although this approach produces theoretically principled decisions, its $\mathcal{O}(N^2)$ pairwise comparison complexity is prohibitive under high IIoT task arrival rates. The authors explicitly deployed the method on resource-rich SDN controllers, introducing a centralised coordinator that becomes a single point of failure. A follow-up hybrid model combining FAHP and FTOPSIS improved utilisation in fog-cloud simulations~\cite{ahmed2024} but similarly assumed a centralised control plane. Ahmed et al.\ proposed an adaptive multi-criteria framework for fog-cloud resource allocation that achieved load balance improvements over conventional round-robin and threshold baselines~\cite{alshafei2023}; however, their weight assignment relied on expert judgement rather than empirical calibration against measured sensor workloads, limiting applicability to heterogeneous IIoT environments.
+Multi-criteria decision-making frameworks extended optimisation approaches by jointly evaluating CPU load, network latency, and queue depth. Ebrahim and Hafid proposed an ELECTRE-based outranking method that ranks fog nodes by pairwise concordance and discordance across multiple criteria~\cite{ebrahim2023b}. Although this approach produces theoretically principled decisions, its $\mathcal{O}(N^2)$ pairwise comparison complexity is prohibitive under high IIoT task arrival rates. The authors explicitly deployed the method on resource-rich SDN controllers, introducing a centralised coordinator that becomes a single point of failure. A follow-up hybrid model combining FAHP and FTOPSIS improved utilisation in fog-cloud simulations~\cite{ahmed2024} but similarly assumed a centralised control plane. Walia et al.\ proposed an adaptive multi-criteria framework for fog-cloud resource allocation that achieved load balance improvements over conventional round-robin and threshold baselines~\cite{walia2024}; however, their weight assignment relied on expert judgement rather than empirical calibration against measured sensor workloads, limiting applicability to heterogeneous IIoT environments.
 
 \subsubsection{Reinforcement Learning Approaches}
 
@@ -143,7 +142,7 @@ Replication-based methods maintain backup copies of tasks across multiple fog no
 
 \subsubsection{Metaheuristic and ML-Based Fault-Tolerant Scheduling}
 
-Hybrid metaheuristic methods have been proposed to jointly optimise workload distribution and fault-tolerant scheduling. Ghasemi proposed the MOHHO algorithm combining Modified Harris Hawks Optimisation with multi-objective service placement in fog computing, which identifies critical tasks and selectively applies replication or resubmission strategies upon node failure~\cite{ghasemi2024}. A 2024 hybrid fault-tolerant scheduling framework using fuzzy logic-based task criticality assessment integrated with dual-backup resubmission demonstrated reduced energy overhead compared to uniform replication, evaluated under failure rates of 1-10\% in iFogSim~\cite{merah2024}. While these approaches improve reliability, they require offline parameter tuning and incur convergence overhead that may delay task reassignment under real-time failure conditions. Mohammadi et al.\ studied fault tolerance specifically in fog-based Social IoT environments and highlighted that combining failure detection with load redistribution in a unified lightweight mechanism remains an open challenge~\cite{mohammadi2023}.
+Hybrid metaheuristic methods have been proposed to jointly optimise workload distribution and fault-tolerant scheduling. Ghasemi proposed the MOHHO algorithm combining Modified Harris Hawks Optimisation with multi-objective service placement in fog computing, which identifies critical tasks and selectively applies replication or resubmission strategies upon node failure~\cite{ghasemi2024}. While these approaches improve reliability, they require offline parameter tuning and incur convergence overhead that may delay task reassignment under real-time failure conditions. Merah et al.\ applied a deep-learning and genetic-algorithm clustering approach to load balancing in IoT edge environments, showing adaptive traffic distribution under workload fluctuations~\cite{merah2025}; however, their framework targets traffic load distribution rather than fault-tolerant task recovery, and does not address mid-window state preservation under node failure. Mohammadi et al.\ studied fault tolerance specifically in fog-based Social IoT environments and highlighted that combining failure detection with load redistribution in a unified lightweight mechanism remains an open challenge~\cite{mohammadi2023}.
 
 \subsubsection{Gossip-Based Failure Detection}
 
@@ -157,7 +156,7 @@ Protecting sensitive IIoT sensor data during transit and processing at intermedi
 
 \subsubsection{Homomorphic Encryption for Fog Aggregation}
 
-Homomorphic encryption enables computation directly on ciphertexts without decryption, making it suitable for privacy-preserving aggregation at fog nodes. Wang et al.\ proposed a Paillier-based privacy-preserving aggregation scheme for fog-assisted IIoT that demonstrated fault tolerance by handling missing sensor readings through blinding factor adjustments~\cite{wang2022}. Shang et al.\ combined Paillier homomorphic encryption with ECDSA signatures to build a fault-tolerant data aggregation scheme that resists collusion attacks between the fog node and the cloud~\cite{shang2023}. A recent fog-enabled secure analytics framework (FESDAO) extended Boneh-Goh-Nissim homomorphic encryption to support not only summation but statistical operations mean, variance, and ANOVA directly on encrypted data at the fog layer, without requiring decryption before analysis~\cite{fesdao2025}. These works collectively confirm the feasibility of fog-layer homomorphic aggregation; however, none addresses the dynamic workload delegation scenario in which sensors are reassigned mid-aggregation-window, which is central to the proposed framework.
+Homomorphic encryption enables computation directly on ciphertexts without decryption, making it suitable for privacy-preserving aggregation at fog nodes. Zhang et al.\ proposed a Paillier-based privacy-preserving aggregation scheme in fog computing that demonstrated fault tolerance by handling false data injection through blinding factor adjustments~\cite{zhang2018}. Shang et al.\ combined Paillier homomorphic encryption with ECDSA signatures to build a fault-tolerant data aggregation scheme that resists collusion attacks between the fog node and the cloud~\cite{shang2023}. A recent fog-enabled secure analytics framework (FESDAO) extended Boneh-Goh-Nissim homomorphic encryption to support not only summation but statistical operations mean, variance, and ANOVA directly on encrypted data at the fog layer, without requiring decryption before analysis~\cite{fesdao2025}. These works collectively confirm the feasibility of fog-layer homomorphic aggregation; however, none addresses the dynamic workload delegation scenario in which sensors are reassigned mid-aggregation-window, which is central to the proposed framework.
 
 The MOZAIK platform demonstrated an end-to-end privacy-preserving IoT-to-cloud architecture using both Secure Multi-Party Computation and Fully Homomorphic Encryption, showing that encrypted data pipelines can satisfy practical latency requirements~\cite{januszewicz2025}. However, MOZAIK targets cloud-centralised analytics and does not incorporate fog-layer load balancing or mid-window delegation semantics. The proposed framework directly addresses this gap by introducing a slot protocol that maintains aggregate correctness under dynamic sensor reassignment, using zero-fill ciphertexts to preserve IND-CPA indistinguishability of vacated slots.
 
@@ -172,16 +171,15 @@ The proposed framework replaces the PRE delegation layer with a Trusted Executio
     \label{sec:arch}
     \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.9\linewidth]{overall_diagram.png}
+    \includegraphics[width=1.0\linewidth]{../figures/overall_diagram.pdf}
     \caption{Architecture of the proposed secure IIoT fog–cloud framework.}
     \label{fig:architecture}
     \end{figure}
-    As shown in Fig.~\ref{fig:architecture}, the proposed system consists of six layers: the IIoT sensor layer, edge gateway layer, fog SGX enclave layer, fog Paillier aggregation layer, fog load-balancing layer, and cloud storage layer. The key management module (KMM) additionally performs a lightweight window-combine step that receives one Paillier aggregate from each fog node every $W=500\,ms$ and combines them homomorphically.
+    As shown in Fig.~\ref{fig:architecture}, the proposed system consists of five layers: the IIoT sensor layer, fog SGX enclave layer, fog Paillier aggregation layer, fog load-balancing layer, and cloud storage layer. The key management module (KMM) additionally performs a lightweight window-combine step that receives one Paillier aggregate from each fog node every $W=500\,ms$ and combines them homomorphically.
 
     \begin{itemize}
         \item \textbf{IIoT Sensor Layer}: IIoT sensors collect environmental or industrial monitoring data. Each sensor sends four AES-128-GCM encrypted readings per aggregation window (one every 125~ms) using the fog-scoped key of its assigned fog node. With 100~sensors across five fog nodes (20~per node), this yields 400~readings per 500~ms window.
-        \item \textbf{Edge Gateway Layer}: A local gateway verifies the AES-GCM authentication tag and forwards accepted ciphertexts to the assigned fog node.
-        \item \textbf{Fog SGX Enclave Layer}: Each fog node hosts an SGX enclave that seals its local $k_{fogI}$, decrypts accepted AES readings, and encrypts scaled readings under Paillier without exposing plaintext to the host OS. $sk_P$ and $k_{store}$ are held exclusively in the dedicated storage-preparation enclave provisioned by the KMM at window close.
+        \item \textbf{Fog SGX Enclave Layer}: Each fog node first verifies the AES-GCM authentication tag of incoming sensor readings using its provisioned fog-scoped key, rejecting readings whose tag fails verification. Accepted ciphertexts are passed to the SGX enclave, which seals its local $k_{fogI}$, decrypts the accepted AES readings, and encrypts scaled readings under Paillier without exposing plaintext to the host OS. $sk_P$ and $k_{store}$ are held exclusively in the dedicated storage-preparation enclave provisioned by the KMM at window close.
         \item \textbf{Fog Paillier Aggregation Layer}: Fog host memory maintains a running Paillier aggregate $C_{agg,F_i}$ for the current $W=500\,ms$ window using additive homomorphic operations.
         \item \textbf{Fog Load-Balancing Layer}: Fog nodes exchange workload status through gossip every $T_g=500\,ms$. Delegation is checked per incoming reading using $LastKnownWorkload$ and the proposed CapacityScore (S6) selector, then executed through KMM-provisioned enclave processing.
         \item \textbf{Key Management and Window Combine}: The KMM provisions keys only after remote attestation, maintains $slot\_map$, and combines one aggregate ciphertext per fog node at window close.
@@ -189,7 +187,7 @@ The proposed framework replaces the PRE delegation layer with a Trusted Executio
     \end{itemize}
 
     \subsection{Subsystem Interaction Overview}
-    The subsystems interact in a sequential pipeline with a conditional branch at the fog layer. Under normal operation, sensor-encrypted data flows from the IIoT Sensor Layer through the Edge Gateway to the primary Fog Node, where the enclave converts AES ciphertext into Paillier ciphertext using that fog node's scoped key. The fog host accumulates a running Paillier aggregate during the current window. When $LastKnownWorkload(F_A) \geq \tau$ for an incoming reading, Fog~A selects the receiving fog node with the proposed CapacityScore (S6) rule, zero-fills that reading's local slot, notifies the KMM, and delegates the original AES ciphertext to Fog~B after the KMM provisions $k_{fogA}$ to Enclave~B. At each window close, the KMM combines one Paillier aggregate per fog node without decryption and sends the final aggregate to an enclave for storage preparation. The complete data pipeline can be summarized as
+    The subsystems interact in a sequential pipeline with a conditional branch at the fog layer. Under normal operation, sensor-encrypted data flows from the IIoT Sensor Layer directly to the primary Fog Node, which verifies the AES-GCM authentication tag before the enclave converts the accepted AES ciphertext into Paillier ciphertext using that fog node's scoped key. The fog host accumulates a running Paillier aggregate during the current window. When $LastKnownWorkload(F_A) \geq \tau$ for an incoming reading, Fog~A selects the receiving fog node with the proposed CapacityScore (S6) rule, zero-fills that reading's local slot, notifies the KMM, and delegates the original AES ciphertext to Fog~B after the KMM provisions $k_{fogA}$ to Enclave~B. At each window close, the KMM combines one Paillier aggregate per fog node without decryption and sends the final aggregate to an enclave for storage preparation. The complete data pipeline can be summarized as
     \begin{equation}
     m_i \rightarrow C_i^{AES} \rightarrow C_i^P \rightarrow C_{agg,F_i} \rightarrow C_{agg}^{final} \rightarrow C_{data}
     \end{equation}
@@ -198,7 +196,7 @@ The proposed framework replaces the PRE delegation layer with a Trusted Executio
 
 
     \subsection{Threat Model}
-    The threat model assumes: (i) sensors are trusted but physically vulnerable to eavesdropping; each sensor holds its own copy of $k_{fogI}$, provisioned by the KMM at initialization, for AES-GCM encryption and for HMAC verification of gossip table summaries; (ii) the edge gateway is a trusted component provisioned with fog-scoped keys for AES-GCM tag verification only---it forwards ciphertexts without decrypting application payloads; (iii) the fog-node host operating system is honest-but-curious, meaning it correctly forwards messages and performs Paillier additions but may attempt to inspect plaintext, intermediate values, or enclave memory; (iv) the TEE enclave on each fog node is trusted after successful remote attestation; (v) the KMM is trusted for fog-scoped key provisioning, slot mapping, revocation, and homomorphic window combine but never decrypts Paillier ciphertexts; (vi) the cloud is honest-but-curious; and (vii) network channels between layers are subject to eavesdropping. SGX hardware prevents the fog-node host OS from accessing enclave memory. Inside each fog node's attested enclave, the sealed copy of $k_{fogI}$ is used for AES decryption and Paillier conversion; plaintext measurements never leave the enclave. $sk_P$, $k_{store}$, and decrypted aggregates are visible only inside the dedicated storage-preparation enclave provisioned by the KMM. The model permits partial loss of the current aggregation window if a fog node fails before its aggregate is delivered to the KMM.
+    The threat model assumes: (i) sensors are trusted but physically vulnerable to eavesdropping; each sensor holds its own copy of $k_{fogI}$, provisioned by the KMM at initialization, for AES-GCM encryption and for HMAC verification of gossip table summaries; (ii) the fog-node host operating system is honest-but-curious, meaning it correctly forwards messages and performs Paillier additions but may attempt to inspect plaintext, intermediate values, or enclave memory; the fog node host verifies AES-GCM tags of incoming sensor readings but does not access enclave memory; (iii) the TEE enclave on each fog node is trusted after successful remote attestation; (iv) the KMM is trusted for fog-scoped key provisioning, slot mapping, revocation, and homomorphic window combine but never decrypts Paillier ciphertexts; (v) the cloud is honest-but-curious; and (vi) network channels between layers are subject to eavesdropping. SGX hardware prevents the fog-node host OS from accessing enclave memory. Inside each fog node's attested enclave, the sealed copy of $k_{fogI}$ is used for AES decryption and Paillier conversion; plaintext measurements never leave the enclave. $sk_P$, $k_{store}$, and decrypted aggregates are visible only inside the dedicated storage-preparation enclave provisioned by the KMM. The model permits partial loss of the current aggregation window if a fog node fails before its aggregate is delivered to the KMM.
 
     \subsubsection{Integrity guarantee} Because the sensor and storage stages use AES-128-GCM, accepted payloads carry integrity protection under the standard nonce-uniqueness assumption. Each protected payload is produced and verified as
     \begin{equation}
@@ -207,19 +205,22 @@ The proposed framework replaces the PRE delegation layer with a Trusted Executio
     \begin{equation}
     m\ \text{or}\ \perp = DecVer_{GCM}(k, n, C, A, T)
     \end{equation}
-    where $T$ is an authentication tag, $n$ is a nonce, and $A$ is associated data. This provides payload integrity for all accepted ciphertexts; the edge gateway rejects any reading whose tag fails verification.
+    where $T$ is an authentication tag, $n$ is a nonce, and $A$ is associated data. This provides payload integrity for all accepted ciphertexts; the fog node rejects any reading whose tag fails verification.
 
     The model does not address denial-of-service attacks on the physical infrastructure.
 
     \section{Our Proposed Scheme}
     The proposed scheme is organized into seven phases. The notations used in this paper are defined in Table~\ref{table:notation}.
 
-    \begin{table}[htbp] 
+    \begin{table*}[htbp]
     \caption{Summary of Notation}
     \label{table:notation}
     \centering
-    \resizebox{1.0\linewidth}{!}{
-    \begin{tabular}{ll}
+    \begingroup
+    \small
+    \setlength{\tabcolsep}{4pt}
+    \renewcommand{\arraystretch}{1.08}
+    \begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.24\textwidth}>{\raggedright\arraybackslash}p{0.70\textwidth}@{}}
     \hline
     \textbf{Notation} & \textbf{Description} \\
     \hline
@@ -277,22 +278,23 @@ The proposed framework replaces the PRE delegation layer with a Trusted Executio
 
     \hline
     \end{tabular}
-    }
-    \end{table}
+    \endgroup
+    \end{table*}
+
 
     The notation in Table~\ref{table:notation} is canonical and used consistently across prose, equations, and Algorithm~1.
 
     \subsection{System Process}
     \begin{figure}
         \centering
-        \includegraphics[width=1.0\linewidth]{flow_diagram.pdf}
+        \includegraphics[width=1.0\linewidth]{../figures/flow_diagram.pdf}
         \caption{Proposed Secure IIoT Data Processing Framework with TEE-Enforced Key Transformation, Paillier Slot Aggregation, and KMM Window Combine}
         \label{fig:workflow}
     \end{figure}
 
     The overall secure data-processing workflow of the proposed framework is illustrated in Fig.~\ref{fig:workflow}.
 
-    The process includes sensor-level AES-GCM encryption, edge-gateway tag verification, SGX-protected AES-to-Paillier conversion, Paillier slot aggregation, per-reading TEE delegation, KMM window combine, and secure AES-GCM cloud storage.
+    The process includes sensor-level AES-GCM encryption, fog-node tag verification, SGX-protected AES-to-Paillier conversion, Paillier slot aggregation, per-reading TEE delegation, KMM window combine, and secure AES-GCM cloud storage.
 
     Paillier partial homomorphic encryption is selected over fully homomorphic schemes such as CKKS and BFV because the target aggregation functions---sum, mean, and weighted sum---require only additive homomorphism. This design choice eliminates noise-budget management, rotation-key generation, and polynomial-degree tuning, reducing implementation complexity while maintaining IND-CPA security under the decisional composite residuosity assumption.
 
@@ -339,7 +341,7 @@ own sealed fog-scoped key.
 
     \subsubsection{\textbf{Phase 2 Sensor Data Encryption}}
 
-    Each sensor encrypts its readings using AES-128-GCM under the fog-scoped key of its assigned fog node (four readings per window as stated in Section~\ref{sec:arch}). A sensor assigned to Fog~A encrypts only with $k_{fogA}$. The edge gateway verifies the AES-GCM authentication tag using its provisioned copy of the fog-scoped key before forwarding the ciphertext to the fog node. A single fog-node failure therefore affects 80 of 400 readings (20\% of window traffic) under an even sensor distribution.
+    Each sensor encrypts its readings using AES-128-GCM under the fog-scoped key of its assigned fog node (four readings per window as stated in Section~\ref{sec:arch}). A sensor assigned to Fog~A encrypts only with $k_{fogA}$. Upon receiving a ciphertext, the fog node verifies the AES-GCM authentication tag using its provisioned fog-scoped key before passing the accepted ciphertext to the SGX enclave for processing. A single fog-node failure therefore affects 80 of 400 readings (20\% of window traffic) under an even sensor distribution.
 
     \begin{equation}
     (C_i^{AES},T_i) = Enc_{GCM}(k_{fogA}, n, m_i, A)
@@ -449,7 +451,7 @@ own sealed fog-scoped key.
     For $k=10$ fog nodes, the table consumes $10\times 28=280$ bytes. On a Cortex-M3 class IIoT sensor with 32~KB RAM, this is less than 1\% of available RAM and remains negligible for the proposed deployment model. No hardware upgrade is required.
 
     \paragraph{Sensor gossip table dissemination.}
-    The edge gateway rebroadcasts an HMAC-authenticated 280-byte gossip summary to downstream sensors every $T_g=500\,\text{ms}$ ($\approx0.56\,\text{KB/s}$, negligible on 20~Mbps or higher links).
+    Each fog node rebroadcasts an HMAC-authenticated 280-byte gossip summary to its downstream sensors every $T_g=500\,\text{ms}$ ($\approx0.56\,\text{KB/s}$, negligible on 20~Mbps or higher links).
 
     \paragraph{Three-layer fault handling hierarchy.}
     The complete fault-handling system uses three layers, each covering failures that the previous layer cannot handle:
@@ -739,7 +741,7 @@ own sealed fog-scoped key.
     F_{target} = \arg\max_{F_j \in N_i} CapacityScore(F_j,\,t_{type})
     \end{equation}
 
-    where $N_i$ represents the set of neighboring fog nodes discovered through the gossip-based status exchange, excluding failed nodes and the primary node itself. Strategies S3--S6 first restrict $N_i$ to nodes with $Workload(F_j)<\tau$ and fall back to all available non-primary nodes only if no under-threshold candidate exists. Strategies S1 and S2 intentionally do not apply this workload filter, modelling blind random and round-robin routing under stress.
+    where $N_i$ represents the set of neighboring fog nodes discovered through the gossip-based status exchange, excluding failed nodes and the primary node itself. The proposed method first restricts $N_i$ to nodes with $Workload(F_j)<\tau$ and falls back to all available non-primary nodes only if no under-threshold candidate exists.
 
 
     \subsubsection{Task-Aware Dynamic Weight Assignment}
@@ -766,14 +768,14 @@ own sealed fog-scoped key.
     \begin{equation}
     (w_1, w_2, w_3, w_4) =
     \begin{cases}
-    (0.10,\; 0.35,\; 0.10,\; 0.45), & \text{Latency-Sensitive (LS)} \\
-    (0.15,\; 0.30,\; 0.10,\; 0.45), & \text{Heavy Processing (HP)}
+    (0.10,\; 0.35,\; 0.10,\; 0.45), &
+    \substack{\text{Latency-Sensitive}\\\text{(LS)}} \\
+    (0.15,\; 0.30,\; 0.10,\; 0.45), &
+    \substack{\text{Heavy Processing}\\\text{(HP)}}
     \end{cases}
     \end{equation}
 
-    S5 uses the same first three score components but omits the compatibility term. Its task-adaptive weights are $(w_1,w_2,w_3)=(0.15,0.45,0.15)$ for LS and $(0.40,0.10,0.30)$ for HP. S4 uses fixed weights $(w_1,w_2,w_3)=(0.50,0.15,0.35)$ for all task types.
-
-    In both S6 configurations, the compatibility weight $w_4 = 0.45$ is the dominant term, ensuring that structural node suitability drives the selection decision beyond raw load conditions. For LS tasks, $w_2 = 0.35$ gives secondary priority to network latency, since these tasks are delay-critical. For HP tasks, $w_2 = 0.30$ and the $\phi_j^2$ factor inside $compat_{HP}$ applies a strong structural penalty to slow nodes, steering compute-heavy tasks away from nodes that cannot meet their execution deadlines. S4 and S6 weights sum to 1.0; S5 is deliberately a three-term adaptive ranking score with no compatibility term. Raw sensor ciphertexts routed during fault recovery (Layers 2 and 3) use the LS configuration by default, as explained in Section~\ref{sec:lb}.
+    In both configurations, the compatibility weight $w_4 = 0.45$ is the dominant term, ensuring that structural node suitability drives the selection decision beyond raw load conditions. For LS tasks, $w_2 = 0.35$ gives secondary priority to network latency, since these tasks are delay-critical. For HP tasks, $w_2 = 0.30$ and the $\phi_j^2$ factor inside $compat_{HP}$ applies a strong structural penalty to slow nodes, steering compute-heavy tasks away from nodes that cannot meet their execution deadlines. Raw sensor ciphertexts routed during fault recovery (Layers 2 and 3) use the LS configuration by default, as explained in Section~\ref{sec:lb}.
 
     Because gossip refreshes $LastKnownWorkload$ every $T_g$ while delegation is checked on every incoming ciphertext, a reading can be delegated at any time within $t\in[0,W]$ rather than waiting for the next window close.
 
@@ -834,251 +836,115 @@ own sealed fog-scoped key.
     \end{tabular}}
     \end{table}
 
-    The experiments fall into two categories. Experiments E1--E5 evaluate the prototype implementation, with E2 and E4 using a calibrated 2048-bit host-reference cryptographic benchmark for the Paillier timing path. The benchmark mode is \texttt{host\_reference\_2048\_no\_ta}: OP-TEE QEMU timing is used only as a prototype reference, not as physical hardware timing, and TA-side 2048-bit Paillier is not enabled in this QEMU prototype. Experiments E6--E8 are analytical models evaluating reading-loss rates, end-to-end deployment latency, and key-exposure counts, respectively. Where applicable, results report 95\% confidence intervals; E5 uses 20 independent seeds $\{42,\ldots,61\}$, while the other simulation experiments use their experiment-specific seed counts.
+    The TEE layer is emulated using OP-TEE running on QEMU (ARM TrustZone emulation). Enclave operations---AES-GCM decryption, Paillier encryption, and key unsealing---are modeled as OP-TEE Trusted Applications executing within the secure world. The \texttt{sgx\_enclave\_process} function in the prototype implements these operations using the OP-TEE QEMU environment; no actual SGX hardware boundary, SGX sealing-key derivation, or SGX remote attestation exchange is present in the simulation. Measured latencies in E2 are host-reference OP-TEE QEMU values and should not be interpreted as physical hardware timings. The architectural design is expressed in SGX terminology (sealing, remote attestation, enclave quotes) because Intel SGX and ARM TrustZone/OP-TEE provide equivalent security primitives under the same TEE trust model; validation on physical SGX or TrustZone hardware is reserved for future work.
 
-    \subsection{E1: Storage Reduction via Paillier Slot Aggregation}
-    \label{sec:eval-e1}
+    Experiments E1--E2 evaluate prototype implementation using a calibrated 2048-bit host-reference Paillier benchmark (\texttt{host\_reference\_2048\_no\_ta} mode). E5 is a simulation study averaged over 20 seeds $\{42,\ldots,61\}$ with 95\% CI. E6 and E8 are analytical models. All results are organized into three thematic groups below.
 
-    \textbf{Objective.} Quantify the per-window cloud storage reduction achieved by replacing $n$ individual sensor ciphertexts with a single Paillier aggregate followed by compact AES re-encryption.
+    \subsection{Storage and Latency Efficiency}
+    \label{sec:eval-storage-latency}
 
-    \textbf{Setup and baselines.} For each sensor count $n\in\{10,50,100,200,500,1000\}$, total cloud storage is computed under four schemes: (i)~\emph{plaintext} ($n\times 8$~bytes), (ii)~\emph{AES-GCM per-reading} ($n\times 36$~bytes: 12-byte nonce, 8-byte ciphertext, 16-byte tag), (iii)~\emph{Paillier without aggregation} ($n\times 512$~bytes at 2048-bit key size), and (iv)~\emph{proposed} (one 512-byte Paillier aggregate, re-encrypted as a single AES-GCM object $C_{data}$ containing $D_{agg}$ and metadata; payload-only size is 36~bytes excluding nonce and tag). The total stored cloud object per window is $C_{data}$ (12-byte nonce + payload + 16-byte GCM tag). Comparisons in the figure report payload-only sizes for consistency with baseline ciphertext sizes. No sensor is trusted with aggregation in any scheme.
-
-    \textbf{Results.} As shown in Fig.~\ref{fig:e1-storage}, the proposed method transmits and stores exactly one ciphertext per window regardless of $n$, reducing ciphertext count from $n$ to 1. Against the AES-GCM per-reading baseline, byte reduction reaches $100\times$ at $n=100$ and $1000\times$ at $n=1000$. Against the Paillier-without-aggregation baseline, the byte reduction factor equals the ciphertext count reduction at each $n$, since both use 512-byte ciphertexts. After the storage preparation phase, the single Paillier aggregate is re-encrypted together with window metadata under $k_{store}$ to produce $C_{data}$; the payload component is 36~bytes (AES-GCM over the 8-byte aggregate value).
-
-    \textbf{Key takeaway.} Paillier slot aggregation reduces cloud storage from a function linear in $n$ to a constant independent of sensor count.
+    \textbf{Storage reduction (E1).} For sensor counts $n\in\{10,50,100,200,500,1000\}$, cloud storage is compared under four schemes: plaintext ($n\times8$~bytes), AES-GCM per-reading ($n\times36$~bytes), Paillier without aggregation ($n\times512$~bytes), and the proposed method (one fixed-size $C_{data}$ per window). As shown in Fig.~\ref{fig:e1-storage}, the proposed method stores exactly one ciphertext per window regardless of $n$, achieving $100\times$ byte reduction over AES-GCM per-reading at $n=100$ and $1000\times$ at $n=1000$. Paillier slot aggregation thus reduces cloud storage from $O(n)$ to $O(1)$.
 
     \begin{figure}[htbp]
     \centering
-    \includegraphics[width=1.0\linewidth]{figures/exp1_storage.pdf}
-    \caption{E1: Storage comparison across schemes as a function of sensor count $n$. The upper panel shows total bytes; the lower panel shows ciphertext count. The proposed method stores one ciphertext per window for all $n$.}
+    \includegraphics[width=1.0\linewidth]{../figures/exp1_storage.pdf}
+    \caption{Storage comparison across schemes vs sensor count $n$. Upper panel: total bytes; lower panel: ciphertext count. The proposed method stores one ciphertext per window for all $n$.}
     \label{fig:e1-storage}
     \end{figure}
 
-    \subsection{E2: Aggregation Latency with 2048-bit Calibration}
-    \label{sec:eval-e2}
+    \textbf{Aggregation latency (E2).} Using calibrated 2048-bit Paillier timings, the proposed pipeline requires $444.128$~ms in total: $227.537$~ms for fog TA conversion, $1.474$~ms for host aggregation and KMM window combine, and $215.117$~ms for storage TA preparation (Fig.~\ref{fig:e2-latency}). The total is within the 500~ms aggregation window; fog conversion and storage preparation dominate, while the KMM combine step contributes only $1.474$~ms regardless of fog-node count (tested up to $k=100$ aggregates). These timings are host-reference values obtained from the OP-TEE QEMU simulation described in Section~\ref{sec:eval-setup} and should not be interpreted as physical hardware timings.
 
-    \textbf{Objective.} Characterize the proposed aggregation pipeline using the calibrated 2048-bit cryptographic benchmark and report the component-level contribution of fog conversion, host aggregation, and storage preparation.
-
-    \textbf{Setup and baselines.} For $n\in\{10,50,100,200,500\}$ sensors per window, plaintext summation and AES-GCM encrypt-then-decrypt are measured directly in Python. The Paillier stages of the proposed path use the calibrated \texttt{secure\_iiot\_full\_crypto\_bench 100 2048} mean timings: fog TA conversion $227.537$~ms, host aggregate/KMM combine $1.474$~ms, and storage TA preparation $215.117$~ms. The benchmark uses 2048-bit Paillier ciphertexts of 512~bytes in \texttt{host\_reference\_2048\_no\_ta} mode.
-
-    \textbf{Results.} Fig.~\ref{fig:e2-latency} shows the latency results. Plaintext summation and AES-GCM encryption remain negligible relative to the cryptographic stages. The calibrated proposed path requires $444.128$~ms in total, composed of $227.537$~ms for fog TA conversion, $1.474$~ms for host aggregation/KMM combine, and $215.117$~ms for storage TA preparation. This is within the 500~ms aggregation window. These values are host-reference OP-TEE QEMU benchmark values; they must not be interpreted as physical hardware timings or as TA-side 2048-bit Paillier execution.
-
-    \textbf{Key takeaway.} The calibrated 2048-bit reference places the proposed path within the 500~ms window, while showing that fog conversion and storage preparation dominate the latency budget.
+    Under hardware-target assumptions (AES-NI, hardware Paillier co-processor), an analytical model places the proposed pipeline at 399~ms in non-delegation windows and 549~ms in delegation windows, where the additional 150~ms covers TEE key provisioning. The 500~ms budget is satisfied in 12 of 20 simulated windows; delegation burst phases (W6--10, W18--20) exceed it by 150~ms. Deployments should account for this overhead through capacity headroom or an extended window during burst phases. Fig.~\ref{fig:e7-pipeline} shows per-window latency across the 20-window schedule.
 
     \begin{figure}[htbp]
     \centering
-    \includegraphics[width=1.0\linewidth]{figures/exp2_latency.pdf}
-    \caption{E2: Aggregation latency vs sensor count $n$ with calibrated 2048-bit host-reference Paillier timings. The dashed line marks the 500~ms window. The right panel shows the calibrated component breakdown of the proposed method.}
+    \includegraphics[width=1.0\linewidth]{../figures/exp2_latency.pdf}
+    \caption{Aggregation latency vs sensor count $n$ with calibrated 2048-bit host-reference Paillier timings. The dashed line marks 500~ms. The right panel shows the component breakdown.}
     \label{fig:e2-latency}
     \end{figure}
 
-    \subsection{E3: Slot Protocol Arithmetic Correctness Under Delegation}
-    \label{sec:eval-e3}
-
-    \textbf{Objective.} Verify that the Paillier slot protocol produces numerically correct aggregates when delegation occurs mid-window, for both single-source and multi-source delegation configurations.
-
-    \subsubsection{E3a: Single-Source Delegation}
-    \textbf{Setup.} A window of $n=100$ sensors is simulated with $k\in\{1,5,10,20,50\}$ sensors randomly delegated mid-window from primary node $F_1$ to backup node $F_4$. For each of 100 independent trials, the true scaled integer aggregate is computed directly from plaintext readings, and the output of the full slot protocol---AES-to-Paillier enclave conversion, Paillier accumulation with zero-fill for vacated slots, KMM combine, and decryption---is compared against it.
-
-    \textbf{Results.} Across all values of $k$ and all 100 trials, the slot protocol produces zero scaled-integer error. A residual quantization error of approximately 0.045 (median absolute deviation from the true floating-point sum) is observed due to fixed-point integer encoding with $scale=1000$ and is consistent across all delegation counts. This is an inherent property of integer Paillier encoding rather than a protocol defect, and its magnitude is inversely proportional to the scaling factor.
-
-    \subsubsection{E3b: Multi-Source Delegation}
-    The protocol is further evaluated under simultaneous delegation from two sources ($F_1$ and $F_2$, each with 30 sensors) to a single backup node ($F_4$ with 30 own sensors), with 5 sensors per source delegated to $F_4$, for 100 independent trials. All 100 trials produce the correct scaled aggregate. The median quantization error is 0.041, consistent with the single-source case.
-
-    \textbf{Key takeaway.} The Paillier slot protocol maintains aggregate correctness under mid-window delegation for both single and multi-source configurations across all 100 trials at every delegation count tested. These results constitute an arithmetic sanity check of the protocol implementation; they do not constitute a cryptographic proof of zero-fill ciphertext indistinguishability, which is argued analytically.
-
     \begin{figure}[htbp]
     \centering
-    \includegraphics[width=1.0\linewidth]{figures/exp3a_correctness.pdf}
-    \caption{E3a: Slot protocol correctness vs delegation count $k$ (100 trials, $n=100$ sensors). The upper panel shows 100\% accuracy at all $k$; the lower panel shows the quantization error due to fixed-point encoding with $scale=1000$.}
-    \label{fig:e3a-correctness}
+    \includegraphics[width=1.0\linewidth]{../figures/exp7_pipeline.pdf}
+    \caption{Analytical pipeline latency (left) and per-window storage items (right) across 20 windows under hardware-target constants. The dashed line marks 500~ms; delegation windows exceed the budget by 150~ms.}
+    \label{fig:e7-pipeline}
     \end{figure}
 
-    \subsection{E4: KMM Window-Combine Overhead}
-    \label{sec:eval-e4}
+    \textbf{Slot protocol correctness (E3).} The slot protocol was verified over 100 independent trials at delegation counts $k\in\{1,5,10,20,50\}$ under single-source delegation ($F_1\to F_4$) and simultaneous dual-source delegation ($F_1,F_2\to F_4$). All trials produced zero scaled-integer arithmetic error. A residual quantization deviation of $\approx$0.045 (median) is inherent to fixed-point Paillier encoding with $scale=1000$ and is consistent across all delegation counts and configurations (Fig.~\ref{fig:e3-correctness}).
 
-    \textbf{Objective.} Characterize the latency of the KMM homomorphic window-combine operation as the number of participating fog nodes $k$ increases from 1 to 100.
 
-    \textbf{Setup.} For $k\in\{1,2,5,10,20,50,100\}$ fog aggregates, the KMM combine stage uses the calibrated host aggregate timing from \texttt{secure\_iiot\_full\_crypto\_bench 100 2048}. The measurement is reported as a 2048-bit host-reference benchmark in \texttt{host\_reference\_2048\_no\_ta} mode. Each aggregate ciphertext is 512~bytes at the 2048-bit key size.
+    \subsection{Load Balancing Performance}
+    \label{sec:eval-lb}
 
-    \textbf{Results.} Fig.~\ref{fig:e4-kmm} shows the calibrated host aggregate/KMM combine reference. The combine stage requires $1.474$~ms and remains well within the 500~ms window budget across the tested fog-aggregate counts. The KMM input size still scales linearly with $k$, from 512~bytes at $k=1$ to 51.2~KB at $k=100$.
+    \textbf{Setup.} Five fog nodes run 20 aggregation windows of 500~ms across five phases: normal operation (W1--5), $F_1$ burst (W6--10), $F_5$ failure (W11--13), recovery (W14--17), and $F_4$ burst (W18--20). Tasks split into latency-sensitive (LS, 100~ms deadline) and heavy-processing (HP, 500~ms deadline) classes. Six strategies are compared: S1 (random), S2 (round-robin), S3 (minimum workload), S4 (fixed CapScore weights), S5 (task-adaptive weights, no compatibility term), and S6 (proposed CapacityScore with compatibility term). Results are averaged over 20 seeds with 95\% CI.
 
-    \textbf{Key takeaway.} The calibrated KMM combine step contributes only $1.474$~ms, so it is not the limiting factor in the 500~ms aggregation window.
+    \textbf{Results.} All six strategies complete 100\% of tasks; the discriminating metrics are deadline satisfaction and routing quality (Fig.~\ref{fig:e5-delegation-quality}). S6 achieves the highest deadline satisfaction at 78.77\% ($\pm$0.88\%), versus 78.35\% for S5, 77.28\% for S3, 77.01\% for S4, and 63.1--63.3\% for S1--S2. S6 also has the lowest mean waiting time at 101.11~ms ($\pm$3.94~ms), compared with 103--104~ms for S3--S5 and 790--854~ms for S1--S2. The 0.42 percentage-point margin between S6 and S5 lies within the confidence intervals; the advantage of the compatibility term is more conclusively demonstrated by the task-type results. S6 has the lowest bandwidth-utilization standard deviation ($\sigma_{BW}=0.225\pm0.005$ vs 0.239 for S5, 0.363 for S1--S2), accepting slightly less even scalar workload balance to reduce deadline misses.
 
-    \begin{figure}[htbp]
-    \centering
-    \includegraphics[width=1.0\linewidth]{figures/exp4_kmm_combine.pdf}
-    \caption{E4: KMM window-combine latency vs number of fog aggregates $k$ using the calibrated 2048-bit host aggregate reference. The dashed line marks 500~ms. The right panel shows total bytes received by the KMM at each $k$.}
-    \label{fig:e4-kmm}
-    \end{figure}
+    The task-type breakdown (Fig.~\ref{fig:e5-task-type}) explains the improvement. HP tasks miss deadlines at 15.18\% under S6, compared with 17.70--18.67\% for S3--S5 and 34--35\% for S1--S2. S6 assigns only 1.97\% of HP tasks to $F_3$ (the slowest node, which executes HP tasks in 600~ms, exceeding the deadline), versus 3.32--3.77\% for S3--S5 and 13.8--14.0\% for S1--S2. Phase-level results show S6 leads during normal operation (92.67\%), recovery (93.83\%), and $F_4$ burst (84.51\%). During $F_5$ failure, S5 performs best (48.22\%) while S6 drops to 37.93\%: the compatibility-heavy weighting ($w_4=0.45$) narrows candidate selection further when the pool shrinks due to failure. Deployments anticipating simultaneous failure and high arrival rates may reduce $w_4$ during degraded-mode operation.
 
-    \subsection{E5: Load Balancing Strategy Comparison}
-    \label{sec:eval-e5}
-
-    \textbf{Objective.} Compare the proposed CapacityScore strategy against five delegation baselines under heterogeneous fog capacity, bursty task arrivals, and a temporary fog-node failure.
-
-    \textbf{Setup and baselines.} The E5 simulator uses five fog nodes with heterogeneous CPU, RAM, bandwidth, latency, and processing-rate factor $\phi$: $F_1$ and $F_5$ are high-capacity low-latency nodes, $F_2$ and $F_4$ are medium-capacity nodes, and $F_3$ is the slowest node. Each run spans 20 aggregation windows of 500~ms. The workload phases are normal operation (W1--5), an $F_1$ burst (W6--10), $F_5$ failure (W11--13), recovery (W14--17), and an $F_4$ burst (W18--20). Tasks are generated from two classes: latency-sensitive (LS) tasks with 100~ms deadlines and heavy-processing (HP) tasks with 500~ms deadlines. Each fog group has a fixed HP/LS mix, creating CPU-heavy, bandwidth-heavy, and LS-only primary identities.
-
-    For the CapacityScore normalization (Eq.~\eqref{eq:e5-normalized-latency-queue}), the latency ceiling is set to $lat_j^{cap} = 40\,\text{ms}$, matching the configured latency of $F_3$, the slowest node in this experiment. Queue occupancy is tracked by the gossip protocol as a pre-normalized fraction in $[0,1]$.
-
-    Six strategies are compared. S1 chooses uniformly at random from candidates; S2 uses a persistent round-robin index; S3 selects the candidate with minimum $Workload(F_j)$; S4 uses fixed CapScore weights; S5 uses task-adaptive weights without a compatibility term; and S6 is the proposed CapacityScore with the compatibility term. Their scoring functions are:
-
-    \begin{equation}
-    \begin{aligned}
-    score_{S4}(F_j) ={}& 0.50(1-Workload(F_j)) \\
-    &+ 0.15(1-\ell_j) \\
-    &+ 0.35(1-q_j)
-    \end{aligned}
-    \label{eq:s4-score}
-    \end{equation}
-
-    \begin{equation}
-    \begin{aligned}
-    score_{S5}(F_j,t_{type}) ={}& w_1(1-Workload(F_j)) \\
-    &+ w_2(1-\ell_j) \\
-    &+ w_3(1-q_j)
-    \end{aligned}
-    \label{eq:s5-score}
-    \end{equation}
-
-    \begin{equation}
-    score_{S6}(F_j,t_{type}) = CapacityScore(F_j,t_{type})
-    \label{eq:s6-score}
-    \end{equation}
-
-    S4 applies fixed weights $(w_1,w_2,w_3)=(0.50,0.15,0.35)$ with no compatibility term. S5 adapts the weights by task type but also omits the compatibility term. S6 adds the task-type compatibility term: LS routing prioritizes bandwidth availability, while HP routing applies a $\phi^2$ penalty to structurally disfavor slow nodes for compute-heavy tasks. Results are averaged over 20 seeds $\{42,\ldots,61\}$ with 95\% confidence intervals.
-
-    \textbf{Metrics.} The reported metrics are completion rate, deadline satisfaction rate, delegation rate, re-delegation rate, mean waiting time, workload standard deviation, resource-utilization standard deviations, per-task-type deadline miss rates, and phase-level deadline satisfaction.
-
-    \textbf{Results.} Aggregate results are shown in Fig.~\ref{fig:e5-delegation-quality} and Fig.~\ref{fig:e5-resource-std}. All six strategies complete 100\% of tasks, so the discriminating metrics are deadline satisfaction and routing quality. S6 achieves the highest overall deadline satisfaction, 78.77\% ($\pm$0.88\%), followed by S5 at 78.35\% ($\pm$0.88\%), S3 at 77.28\% ($\pm$0.79\%), S4 at 77.01\% ($\pm$0.70\%), S2 at 63.34\% ($\pm$0.52\%), and S1 at 63.10\% ($\pm$0.61\%). The 0.42 percentage-point margin between S6 and S5 lies within the reported confidence intervals; the advantage of the compatibility term is more conclusively demonstrated by the per-task-type and bandwidth-balance metrics reported below. S6 also has the lowest mean waiting time, 101.11~ms ($\pm$3.94~ms), compared with 103--104~ms for S3--S5 and approximately 790--854~ms for S1--S2. The proposed S6 strategy delegates fewer tasks than the other informed strategies, 43.87\% ($\pm$1.21\%) versus 47.99--49.19\% for S3--S5, and no strategy produces re-delegation in this simulator configuration.
-
-    Resource-balance results show the effect of the compatibility term. S6 has the lowest bandwidth-utilization standard deviation, $\sigma_{BW}=0.225$ ($\pm$0.005), compared with 0.239 for S5, 0.250 for S3, 0.251 for S4, and 0.363 for S1--S2. The time-series view in Fig.~\ref{fig:e5-sigma-bw-ts} shows the same behavior across the burst, failure, and recovery phases. S6 does not minimize the scalar workload standard deviation because it intentionally avoids using structurally incompatible capacity; its mean workload standard deviation is 0.167, while S3--S5 are approximately 0.155--0.156. This is an expected tradeoff: S6 accepts slightly less even scalar workload distribution to reduce deadline misses and bandwidth imbalance.
-
-    The task-type breakdown in Fig.~\ref{fig:e5-task-type} and Fig.~\ref{fig:e5-hp-f3} explains the deadline improvement. HP tasks miss deadlines at 15.18\% under S6, compared with 17.70\% for S4, 18.59\% for S3, 18.67\% for S5, and about 34--35\% for S1--S2. S6 assigns only 1.97\% of HP tasks to $F_3$, while S3--S5 assign 3.32--3.77\% and S1--S2 assign approximately 13.8--14.0\%. Because $F_3$ executes HP tasks in 600~ms, exceeding the HP deadline, reducing HP placement on $F_3$ directly reduces deadline failures. Phase-level results in Fig.~\ref{fig:e5-phase-deadline} show that S6 is strongest during normal operation (92.67\%), recovery (93.83\%), and the $F_4$ burst phase (84.51\%). During $F_5$ failure, S5 performs best (48.22\%) while S6 drops to 37.93\%. This is an expected consequence of the compatibility-heavy weighting ($w_4=0.45$): when node failure reduces the candidate pool, S6's structural selectivity narrows choices further than S5's load-only ranking. Deployments anticipating simultaneous node failure and high task arrival rates may consider reducing $w_4$ during degraded-mode operation to recover broader candidate coverage.
-
-    \textbf{Key takeaway.} E5 shows that CapacityScore improves deadline satisfaction primarily by routing HP tasks away from structurally incompatible nodes and by reducing bandwidth-utilization variance. The result is not a completion-rate improvement, since every strategy completes all tasks in this configuration; it is a deadline and routing-quality improvement under heterogeneous fog capacity and phased stress.
+    \textbf{Key takeaway.} CapacityScore improves deadline satisfaction by routing HP tasks away from structurally incompatible nodes and reducing bandwidth variance — not by completing more tasks, but by meeting deadlines under heterogeneous capacity and phased stress.
 
     \begin{figure}[htbp]
     \centering
-    \includegraphics[width=1.0\linewidth]{figures/e5_figA_delegation_quality.png}
-    \caption{E5 Figure A: delegation quality across S1--S6. Panels report completion rate, deadline satisfaction rate, delegation rate, and mean waiting time over 20 seeds with 95\% CI.}
+    \includegraphics[width=1.0\linewidth]{../figures/e5_summary.pdf}
+    \caption{Six-strategy load-balancing comparison: completion rate, deadline satisfaction, delegation rate, mean waiting time, and bandwidth-utilization standard deviation over 20 seeds with 95\% CI.}
     \label{fig:e5-delegation-quality}
     \end{figure}
 
     \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.9\linewidth]{figures/e5_figB_resource_util_std.png}
-    \caption{E5 Figure B: bandwidth-utilization standard deviation across fog nodes. Lower $\sigma_{BW}$ indicates more stable bandwidth distribution.}
-    \label{fig:e5-resource-std}
-    \end{figure}
-
-    \begin{figure}[htbp]
-    \centering
-    \includegraphics[width=1.0\linewidth]{figures/e5_figC_sigma_bw_timeseries.png}
-    \caption{E5 Figure C: $\sigma_{BW}$ time series across normal, burst, failure, recovery, and second-burst phases. Shaded bands mark stress and failure intervals.}
-    \label{fig:e5-sigma-bw-ts}
-    \end{figure}
-
-    \begin{figure}[htbp]
-    \centering
-    \includegraphics[width=1.0\linewidth]{figures/e5_figD_ttotal_boxplots.png}
-    \caption{E5 Figure D: deadline miss rate by task type. S6 reduces HP misses by avoiding structurally slow HP placements.}
+    \includegraphics[width=1.0\linewidth]{../figures/e5_deadline_vs_f3.pdf}
+    \caption{Deadline satisfaction vs HP task assignment rate to $F_3$ across S1--S6 over 20 seeds. S6 reduces HP tasks routed to the slowest node, improving overall deadline satisfaction.}
     \label{fig:e5-task-type}
     \end{figure}
 
-    \begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.9\linewidth]{figures/e5_figE_node_scatter_w8.png}
-    \caption{E5 Figure E: HP assignment rate to $F_3$, the slowest and HP-incompatible node. Lower values indicate better task-aware routing.}
-    \label{fig:e5-hp-f3}
-    \end{figure}
 
-    \begin{figure}[htbp]
-    \centering
-    \includegraphics[width=1.0\linewidth]{figures/e5_figF_phase_deadline.png}
-    \caption{E5 Figure F: phase-level deadline satisfaction over 20 seeds with 95\% CI.}
-    \label{fig:e5-phase-deadline}
-    \end{figure}
+    \subsection{Fault Tolerance and Security}
+    \label{sec:eval-ft-sec}
 
-    \subsection{E6: Fault Detection and Recovery Analysis}
-    \label{sec:eval-e6}
-
-    \textbf{Objective.} Evaluate data loss rate and recovery latency of the proposed ACK+KMM fault recovery mechanism against five representative baselines across three failure timing scenarios.
-
-    \textbf{Setup and baselines.} An analytical reading-loss model is evaluated over 30 simulation seeds and three failure scenarios: failure at the start of the observation window (\textit{fail\_0ms}), failure at 250~ms (\textit{mid\_window}), and failure at 450~ms (\textit{late\_window}). The observation period spans 2000~ms (four 500~ms windows), during which 400 readings are generated in total (100 per 500~ms window, one per sensor). The compared baselines are derived from representative fault-tolerance mechanisms reported in the literature, but they are implemented as simulator-level abstractions rather than complete reproductions of the cited systems. This distinction is important because the original studies differ in architecture, workload, and optimization objective.
-
-    Table~\ref{tab:e6-baselines} summarizes the five baselines used in E6. B1 is the direct gossip-only baseline used by the proposed architecture, where a fog failure is detected only after $r{=}3$ missed gossip rounds, giving $rT_g=3\times500\,\text{ms}=1500\,\text{ms}$. During this interval, readings addressed to the failed fog node are counted as lost. B2 abstracts replica-based fog fault tolerance, following the principle that task reliability can be improved by executing replicas on alternative fog resources~\cite{liu2024replica}; in the simulator, each sensor reading is sent simultaneously to a primary and backup fog node, so data loss is zero under a single primary failure but message and compute units are doubled. B3 abstracts checkpoint/recovery mechanisms used in resilient cloud and service-function-chain management~\cite{shahab2025sfc}; the simulator models periodic checkpoints at 500~ms intervals and a 500~ms restore interval, so readings after the latest checkpoint and before recovery completion may be unavailable. B4 is based on multilayer liveness detection, where multiple detector layers are combined to reduce fault detection time compared with a single heartbeat detector~\cite{lee2022multilayer}; the simulator represents this idea using independent sensor, fog, and KMM-layer checks and uses the earliest active detection result. B5 is based on fog/SIoT clustering fault tolerance, where clusters and standby resources support fault detection and recovery~\cite{mohammadi2023fsiot}; the simulator models a cluster coordinator that detects the failed fog node, selects a replacement, and reroutes subsequent readings.
+    \textbf{Fault recovery (E6).} An analytical reading-loss model is evaluated over 30 seeds under three failure timings: failure at $t=0$~ms, 250~ms, and 450~ms within a 2000~ms observation window (400 total readings). Five baselines are compared (Table~\ref{tab:e6-baselines}): B1 gossip-only, B2 replication~\cite{liu2024replica}, B3 checkpoint/recovery~\cite{shahab2025sfc}, B4 multilayer detection~\cite{lee2022multilayer}, and B5 fog-clustering~\cite{mohammadi2023}. The proposed ACK+KMM method uses $T_{ack}=100\,\text{ms}$ plus $T_{KMM}=50\,\text{ms}$ provisioning, yielding 150~ms recovery latency.
 
     \begin{table}[htbp]
     \centering
-    \caption{E6 Literature-Derived Fault-Tolerance Baselines}
+    \caption{Fault-Tolerance Baselines}
     \label{tab:e6-baselines}
-    \begin{tabular}{p{0.12\linewidth}p{0.28\linewidth}p{0.47\linewidth}}
+    \begin{tabular}{p{0.10\linewidth}p{0.82\linewidth}}
     \toprule
-    Baseline & Reference role & Simulator abstraction \\
+    & Simulator abstraction \\
     \midrule
-    B1 & Direct gossip-only baseline & Failure detected after $rT_g=1500\,\text{ms}$; readings sent to the failed fog before detection are lost. \\
-    B2 & Replica-based fog fault tolerance~\cite{liu2024replica} & Each reading is sent to both primary and backup fog nodes; backup output is used after primary failure. \\
-    B3 & Checkpoint/recovery baseline~\cite{shahab2025sfc} & A checkpoint is written periodically; recovery resumes from the latest checkpoint after a restore delay. \\
-    B4 & Multilayer liveness detection~\cite{lee2022multilayer} & Sensor, fog, and KMM-layer detectors operate independently; detection uses the earliest active layer result. \\
-    B5 & Fog-clustering fault tolerance~\cite{mohammadi2023fsiot} & A cluster coordinator detects the failed fog, selects a replacement, and reroutes later readings. \\
+    B1 & Gossip-only: failure detected after $rT_g=1500\,\text{ms}$; readings in outage window lost. \\
+    B2 & Replication~\cite{liu2024replica}: each reading sent to primary and backup; zero loss, $2\times$ message cost. \\
+    B3 & Checkpoint~\cite{shahab2025sfc}: 500~ms checkpoint interval; readings after latest checkpoint lost until restore. \\
+    B4 & Multilayer detection~\cite{lee2022multilayer}: sensor/fog/KMM detectors; earliest layer result used. \\
+    B5 & Clustering~\cite{mohammadi2023}: coordinator detects failure and reroutes subsequent readings. \\
     \bottomrule
     \end{tabular}
     \end{table}
 
-    The proposed method uses sensor ACK timeout $T_{ack}{=}100\,\text{ms}$ followed by KMM key provisioning $T_{KMM}{=}50\,\text{ms}$, yielding a modeled recovery latency of 150~ms. The backup fog node is selected using CapacityScore (S6) with the LS weight configuration as the default, since raw sensor ciphertexts carry no task-type metadata (see Section~\ref{sec:lb}). The analytical model treats backup selection as a black box: it assumes the selected node has sufficient residual capacity to accept redirected readings within the $T_{ack}+T_{KMM}$ window; the specific backup node chosen does not affect the reported loss rates or recovery latency. All results are therefore analytical estimates under a common failure-timing model and should not be interpreted as empirical end-to-end measurements of the original baseline systems.
-
-    \textbf{Results.} Fig.~\ref{fig:e6-fault} shows data loss rates and recovery latency across methods. Loss rates are reported as a fraction of the 400-reading observation total; this denominator is held fixed across all methods so that all methods are compared on a common scale. The simulator counts all sensor readings that fall within the failure-to-recovery time window as lost. In the worst-case scenario (failure at $t{=}0$), the proposed method (using CapacityScore S6 with LS-default weight configuration for backup node selection) loses approximately 7.5\% of readings ($\approx$30 of 400 during the 150~ms recovery window), averaged over 30 seeds. Recovery latency is measured from the first missed ACK event, not from the failure instant; worst-case failure-to-detection can be up to one inter-reading interval (125~ms) longer if the node fails immediately after a successful transmission. The proposed method compares with 75\% for B1 gossip (1500~ms outage), 25\% each for B3 checkpoint and B4 multilayer (500~ms detection windows), and approximately 38\% for B5 clustering (750~ms window). B2 replication achieves zero data loss at the cost of doubling message overhead. The proposed method incurs a message overhead of $1.055\times$ the baseline, attributable to per-reading ACK messages and two KMM provisioning messages per recovery event. Fig.~\ref{fig:e6-tradeoff} illustrates the data-loss versus message-overhead tradeoff space; the proposed method is nearest to the origin among single-mechanism approaches.
-
-    \textbf{Key takeaway.} The proposed ACK+KMM mechanism reduces worst-case data loss from 75\% (gossip-only) to approximately 7.5\% while incurring only a 5.5\% increase in message overhead, representing a favorable tradeoff relative to all compared baselines except B2 replication, which achieves zero data loss at $2\times$ message cost.
+    In the worst case (failure at $t=0$), the proposed method loses $\approx$7.5\% of readings (30 of 400 during the 150~ms recovery window), versus 75\% for B1 gossip, $\approx$38\% for B5 clustering, and 25\% each for B3 and B4. B2 replication achieves zero loss at $2\times$ message overhead; the proposed method incurs only $1.055\times$. Fig.~\ref{fig:e6-fault} shows loss rates and recovery latency; Fig.~\ref{fig:e6-tradeoff} shows the loss--overhead tradeoff, where the proposed method is nearest to the origin among single-mechanism approaches.
 
     \begin{figure}[htbp]
     \centering
-    \includegraphics[width=1.0\linewidth]{figures/exp6_data_loss.pdf}
-    \caption{E6: Data loss rate (upper) and recovery latency (lower) across six methods and three failure timing scenarios, averaged over 30 seeds with 95\% CI. Results are derived from an analytical reading-loss model.}
+    \includegraphics[width=1.0\linewidth]{../figures/exp6_data_loss.pdf}
+    \caption{Data loss rate (upper) and recovery latency (lower) across six methods and three failure timings, averaged over 30 seeds with 95\% CI.}
     \label{fig:e6-fault}
     \end{figure}
 
     \begin{figure}[htbp]
     \centering
-    \includegraphics[width=1.0\linewidth]{figures/exp6_tradeoff.pdf}
-    \caption{E6: Data loss vs message overhead tradeoff. Each marker represents one method; the proposed ACK+KMM method (green) is closest to the origin in loss--overhead space.}
+    \includegraphics[width=1.0\linewidth]{../figures/exp6_tradeoff.pdf}
+    \caption{Data loss vs message overhead tradeoff. The proposed ACK+KMM method (green) is closest to the origin among single-mechanism approaches.}
     \label{fig:e6-tradeoff}
     \end{figure}
 
-    \subsection{E7: End-to-End Pipeline Latency (Analytical Model)}
-    \label{sec:eval-e7}
+    \textbf{Key exposure blast radius (E8).} Four compromise scenarios are evaluated analytically for 100 sensors across five fog nodes (20 per node). Under single-node enclave compromise ($F_1$), fog-scoped keys expose only 20 sensors versus all 100 under a global key (80\% reduction). Under backup-node compromise during active delegation ($F_4$ holding provisioned $k_{fogA}$), 40 sensors are exposed versus 100 (60\% reduction). KMM compromise exposes all 100 sensors under both designs since the KMM is the common trust anchor. Host OS memory access exposes zero sensors under both designs due to SGX enclave isolation. Fig.~\ref{fig:e8-blast} summarizes all scenarios.
 
-    \textbf{Objective.} Estimate end-to-end latency and per-window storage footprint of the proposed pipeline under hardware-accelerator assumptions and compare against three representative baselines across dynamic window conditions.
-
-    \textbf{Setup and baselines.} The model uses hardware-target latency constants: sensor AES encryption (0.001~ms, hardware AES-NI), Paillier encryption per slot (3.8~ms, hardware-assisted co-processor), Paillier homomorphic addition (0.01~ms), KMM combine inside TEE (1.0~ms), storage preparation (5.0~ms), cloud upload (10.0~ms), and TEE key delegation round-trip (150.0~ms). For $n{=}100$ sensors, four methods are evaluated across the same 20-window schedule as E5: (i)~\emph{cloud-only} (raw sensor values uploaded directly, no fog processing), (ii)~\emph{fog plaintext} (fog accumulates an unencrypted sum; insecure lower bound), (iii)~\emph{Paillier-fog-convert} (per-reading Paillier encryption at the fog, no slot aggregation, one ciphertext per window sent to cloud), and (iv)~\emph{proposed}. These latency constants represent a separate target-deployment analytical model; E2 reports the calibrated 2048-bit host-reference benchmark.
-
-    \textbf{Results.} Fig.~\ref{fig:e7-pipeline} shows pipeline latency and per-window storage. Cloud-only and fog-plaintext complete in 40~ms and 13~ms, respectively; however, cloud-only stores 100 raw values per window (800~bytes) while fog-plaintext provides no data confidentiality. The Paillier-fog-convert baseline requires 393~ms and stores one 512-byte ciphertext per window, satisfying the 500~ms budget across all 20 windows. The proposed method requires 399~ms during non-delegation windows (12 of 20 windows) and 549~ms during delegation windows (8 of 20 windows, corresponding to the F2-overload burst phases W6--10 and W18--20), where the additional 150~ms TEE key delegation step is active. Both the proposed method and the Paillier-fog-convert baseline store one aggregate per window, compared with 100 raw items per window for cloud-only.
-
-    \textbf{Key takeaway.} Under hardware-target assumptions, the proposed method achieves the same aggregate storage efficiency as the Paillier-fog-convert baseline (one ciphertext per window) while additionally supporting delegation and fault recovery. The 500~ms budget is maintained in 12 of 20 windows; delegation windows (W6--10 and W18--20) incur an additional 150~ms, which is the cost of TEE key provisioning. Systems deploying the proposed scheme should account for this delegation overhead in capacity planning, either by provisioning sufficient headroom or by extending the aggregation window during anticipated burst phases. The fog-plaintext baseline serves as a latency lower bound only and does not satisfy the confidentiality requirements of the proposed threat model.
+    \textbf{Key takeaway.} Fog-scoped key isolation reduces the blast radius by 60--80\% in single-node compromise scenarios. The benefit does not extend to KMM compromise, the identified critical single point of failure.
 
     \begin{figure}[htbp]
     \centering
-    \includegraphics[width=1.0\linewidth]{figures/exp7_pipeline.pdf}
-    \caption{E7: Analytical end-to-end pipeline latency (left) and per-window storage items (right) for four methods across 20 windows ($n{=}100$). The dashed line marks the 500~ms window budget. The proposed method exceeds this budget in 8 windows where TEE key delegation is active. \textbf{Note}: This is an analytical model using hardware-target constants; E2 reports a separate calibrated 2048-bit host-reference benchmark.}
-    \label{fig:e7-pipeline}
-    \end{figure}
-
-    \subsection{E8: Key Exposure Blast Radius}
-    \label{sec:eval-e8}
-
-    \textbf{Objective.} Quantify the number of sensors whose decryption key is exposed under four threat scenarios, comparing a global shared AES key architecture with the proposed fog-scoped key design.
-
-    \textbf{Setup.} The system consists of 100 sensors distributed evenly across five fog nodes (20 per node). Four compromise scenarios are evaluated using analytical exposure accounting: (i)~\emph{one fog node compromised} ($F_1$ enclave physically broken); (ii)~\emph{backup node compromised during active delegation} ($F_4$ enclave broken while holding a provisioned $k_{fogA}$ key); (iii)~\emph{KMM compromised}; and (iv)~\emph{host OS reads enclave memory} (under the standard SGX honest-but-curious threat model). These results represent analytical exposure counts and are not the product of a cryptographic attack simulation or SGX penetration test.
-
-    \textbf{Results.} Fig.~\ref{fig:e8-blast} shows the results. In scenario~(i), a global key scheme exposes all 100 sensors while fog-scoped keys expose only the 20 sensors assigned to the compromised node, an 80\% reduction. In scenario~(ii), the backup node holds only $k_{fogA}$ provisioned for the current delegation epoch, exposing 40 sensors (20 from $F_1$ and 20 from $F_4$'s own group) versus all 100 under a global key, a 60\% reduction. In scenario~(iii), KMM compromise exposes all 100 sensors under both schemes, since the KMM is the trust anchor for both; no isolation benefit exists in this scenario. In scenario~(iv), the SGX assumption prevents host OS access to enclave memory in both schemes, so no sensors are exposed under either design.
-
-    \textbf{Key takeaway.} Fog-scoped key isolation reduces sensor exposure by 60--80\% in single-node compromise scenarios relative to a global key design. The benefit does not extend to KMM compromise, which the threat model identifies as a critical single point of failure common to both schemes.
-
-    \begin{figure}[htbp]
-    \centering
-    \includegraphics[width=1.0\linewidth]{figures/exp8_blast_radius.pdf}
-    \caption{E8: Analytical key exposure comparison between a global AES key design and the proposed fog-scoped key design across four threat scenarios (100 sensors total, 20 per node). KMM compromise exposes all sensors under both schemes.}
+    \includegraphics[width=1.0\linewidth]{../figures/exp8_blast_radius.pdf}
+    \caption{Key exposure comparison between global and fog-scoped key designs across four threat scenarios (100 sensors, 20 per node).}
     \label{fig:e8-blast}
     \end{figure}
 
@@ -1086,7 +952,7 @@ own sealed fog-scoped key.
 
     A limitation of the present work is that the CapacityScore (S6) weights $(w_1, w_2, w_3, w_4)$ and the compatibility term coefficients are fixed heuristics selected by task classification rather than learned from observed workload distributions. The strategy comparison in E5 demonstrates the advantage of the compatibility-aware term over simpler scoring strategies, but the specific weight values motivate data-driven adaptation. An important direction for future work is to replace the static weight table with an online learning mechanism---such as a contextual bandit or lightweight reinforcement learning policy---that adjusts weights based on observed deadline miss rates and node utilization histories across aggregation windows. Additionally, the workload update model in E5 uses a formula-based service time derived from static node profiles rather than a principled queuing model; extending the simulation to a discrete-event framework with explicit queue dynamics (e.g., M/M/$c$ per node) would produce more accurate estimates of redelegation rates and deadline miss probabilities at larger scales. The present evaluation covers five fog nodes, 20 windows, and 46--58 tasks per window depending on the stress phase; characterizing system behavior under hundreds of nodes and high-variance arrival rates represents a necessary step toward deployment-scale validation. Furthermore, the current Paillier-based aggregation layer supports only additive operations---sum, mean, and weighted sum. Future work will extend the scheme to CKKS-based slot batching to support multiplicative aggregation functions such as variance, product aggregation, and nonlinear statistics, and to provide approximate arithmetic over packed sensor vectors with formally bounded noise growth.
 
-    The experimental evaluation rests on several simplifying assumptions that limit direct correspondence to real deployments. The SGX trusted execution environment is entirely simulated: \texttt{sgx\_enclave\_process} is implemented as an ordinary Python function performing AES decryption followed by Paillier encryption, with no actual enclave boundary, no sealing key derivation, and no remote attestation exchange. The KMM provisioning latency $T_{KMM}=50\,\text{ms}$ is a fixed design parameter rather than a measured quantity. Future work should implement the enclave layer using a real SGX SDK (e.g., Intel SGX SDK or Gramine) and validate provisioning latency on Skylake or Ice Lake class hardware. Similarly, the end-to-end pipeline latency in E7 is derived entirely from hardcoded hardware-target constants; these estimates should be replaced by measurements on physical fog hardware equipped with AES-NI and an SGX-capable processor.
+    The experimental evaluation rests on several simplifying assumptions that limit direct correspondence to real deployments. As described in Section~\ref{sec:eval-setup}, the TEE layer is emulated using OP-TEE on QEMU; no physical enclave boundary, sealing-key derivation, or remote attestation exchange is present in the prototype. The KMM provisioning latency $T_{KMM}=50\,\text{ms}$ is a fixed design parameter rather than a measured quantity. Future work should deploy the enclave layer on physical hardware---either an Intel SGX-capable processor using the Intel SGX SDK or Gramine, or an ARM TrustZone board running OP-TEE---and measure provisioning latency directly. Similarly, the end-to-end pipeline latency in E7 is derived entirely from hardcoded hardware-target constants; these estimates should be replaced by measurements on physical fog hardware equipped with AES-NI and a hardware TEE.
 
     The fault tolerance evaluation in E6 is based on an analytical reading-loss model that counts sensor readings falling within a fixed failure-to-recovery time window under three predetermined failure timings. This model does not capture cascading failures, partial node degradation, network partition effects, or the interaction between simultaneous sensor ACK timeouts and the gossip convergence process. Future work should validate the proposed ACK+KMM recovery mechanism under realistic fault injection using network emulation tools such as tc-netem or a containerized testbed, and should extend the failure model to cover correlated multi-node failures and transient network outages. The gossip protocol parameters---fan-out $k{=}3$, miss threshold $r{=}3$, and gossip interval $T_g{=}500\,\text{ms}$---are fixed throughout the evaluation; the probabilistic detection model derived from the Poisson failure process provides a design criterion ($T_g \leq \ln(20)/(\mu r)$ for $\beta=0.95$), but adaptive parameter selection under varying failure rates $\mu$ has not been investigated. The KMM is currently modeled as a single trusted authority; future work may investigate threshold or multi-party key management constructions that distribute the trust anchor across a quorum of KMM instances, reducing the exposure when the KMM is compromised. Finally, the present scheme provides computational confidentiality under the IND-CPA assumption for Paillier and AES-GCM but does not address what an honest-but-curious cloud observer can infer from the sequence of decrypted aggregates over time. Investigating differential privacy mechanisms for the aggregate output, or bounding the statistical leakage of the published aggregate stream, remains an open problem for future work.
 

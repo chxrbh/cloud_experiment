@@ -65,6 +65,7 @@ from crypto_sim import (
     sgx_enclave_process,
     sgx_enclave_storage_prep,
 )
+from util import _readings
 
 
 # ---------------------------------------------------------------------------
@@ -109,10 +110,6 @@ def run_e1(pub_key: PaillierPublicKey) -> list[dict[str, object]]:
 # ---------------------------------------------------------------------------
 # E2 — Latency
 # ---------------------------------------------------------------------------
-def _readings(n: int, rng: random.Random) -> list[float]:
-    return [round(rng.uniform(0, 150), 4) for _ in range(n)]
-
-
 def _stats(values: list[float]) -> tuple[float, float]:
     return statistics.median(values), statistics.stdev(values) if len(values) > 1 else 0.0
 

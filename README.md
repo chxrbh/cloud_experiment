@@ -31,14 +31,14 @@ This codebase reproduces and repairs a three-part experiment series (P1, P2, P3)
 - **End-to-end pipeline latency** across the full proposed system (E7)
 - **Blast radius analysis** for key compromise scenarios (E8)
 
-> **Security note:** SGX/TEE behaviour is *simulated*. Hardware isolation is a formal assumption, not a live enclave implementation.
+> **Security note:** SGX/TEE behaviour is _simulated_. Hardware isolation is a formal assumption, not a live enclave implementation.
 
 ---
 
 ## Project Structure
 
 ```
-d/
+cloud_experiment/
 │
 ├── config.py              # All shared constants and experiment parameters
 ├── crypto_sim.py          # Cryptographic primitives (Paillier, AES-GCM, KMM, SGX sim)
@@ -146,8 +146,8 @@ pip install streamlit plotly
 
 ```bash
 # Clone the repository
-git clone https://github.com/<your-username>/iiot_simulation_p1_complete.git
-cd iiot_simulation_p1_complete/d
+git clone https://github.com/chxrbh/cloud_experiment.git
+cd cloud_experiment  # all scripts run from this directory
 
 # (Recommended) Create a virtual environment
 python -m venv venv
@@ -185,14 +185,14 @@ python run_all_p3.py
 
 All three scripts share the following flags:
 
-| Flag | Default | Description |
-|---|---|---|
-| `--seed` | `42` | Random seed for reproducibility |
-| `--key-bits` | `2048` | Paillier key size in bits |
-| `--results-dir` | `results/` | Output directory for CSV, metadata, and summaries |
-| `--quick` | *(off)* | Smoke-test mode: 256-bit keys, reduced loops; output goes to `results_quick/` |
-| `--no-progress` | *(off)* | Disable terminal progress bars |
-| `--show-figures` | *(off)* | **Deprecated** — experiment runners no longer generate figures; use `scripts/plot_experiments.py` instead |
+| Flag             | Default    | Description                                                                                               |
+| ---------------- | ---------- | --------------------------------------------------------------------------------------------------------- |
+| `--seed`         | `42`       | Random seed for reproducibility                                                                           |
+| `--key-bits`     | `2048`     | Paillier key size in bits                                                                                 |
+| `--results-dir`  | `results/` | Output directory for CSV, metadata, and summaries                                                         |
+| `--quick`        | _(off)_    | Smoke-test mode: 256-bit keys, reduced loops; output goes to `results_quick/`                             |
+| `--no-progress`  | _(off)_    | Disable terminal progress bars                                                                            |
+| `--show-figures` | _(off)_    | **Deprecated** — experiment runners no longer generate figures; use `scripts/plot_experiments.py` instead |
 
 **Example — quick smoke test:**
 
@@ -243,27 +243,27 @@ Runs single-seed (42) checks 1–5 against the E5 specification to confirm corre
 
 ## Experiments
 
-| ID | Part | Description |
-|---|---|---|
-| E1 | P1 | Ciphertext storage comparison: Paillier vs. AES-GCM vs. plaintext |
-| E2 | P1 | Aggregation latency of 2048-bit Paillier vs. 500 ms window |
-| E3a | P1 | KMM single-source key delegation correctness |
-| E3b | P2 | KMM multi-source key delegation correctness |
-| E4 | P2 | KMM combine overhead at varying delegation counts (k) |
-| E5 | P1 | Dynamic task scheduling with capacity scoring |
-| E6 | P2 | Fault detection — ACK/KMM, checkpoint, replication strategies |
-| E7 | P3 | End-to-end pipeline latency across all pipeline stages |
-| E8 | P3 | Blast radius analysis for key compromise scenarios |
+| ID  | Part | Description                                                       |
+| --- | ---- | ----------------------------------------------------------------- |
+| E1  | P1   | Ciphertext storage comparison: Paillier vs. AES-GCM vs. plaintext |
+| E2  | P1   | Aggregation latency of 2048-bit Paillier vs. 500 ms window        |
+| E3a | P1   | KMM single-source key delegation correctness                      |
+| E3b | P2   | KMM multi-source key delegation correctness                       |
+| E4  | P2   | KMM combine overhead at varying delegation counts (k)             |
+| E5  | P1   | Dynamic task scheduling with capacity scoring                     |
+| E6  | P2   | Fault detection — ACK/KMM, checkpoint, replication strategies     |
+| E7  | P3   | End-to-end pipeline latency across all pipeline stages            |
+| E8  | P3   | Blast radius analysis for key compromise scenarios                |
 
 ### Key findings
 
-- **E1:** The proposed scheme reduces ciphertext count from *n* to 1 per window (100x–1000x storage reduction).
+- **E1:** The proposed scheme reduces ciphertext count from _n_ to 1 per window (100x–1000x storage reduction).
 - **E2:** The calibrated 2048-bit host-reference path is 444.128 ms, within the 500 ms aggregation window. Caveat: OP-TEE QEMU timing only, not physical hardware timing; TA-side 2048-bit Paillier is not enabled.
-- **E3a/E3b:** 100% slot-protocol correctness under mid-window delegation for all delegation counts *k*.
+- **E3a/E3b:** 100% slot-protocol correctness under mid-window delegation for all delegation counts _k_.
 - **E4:** KMM window-combine overhead is 1.474 ms in the calibrated host aggregate reference.
 - **E5:** E5v2 Full-CapScore (S6) achieves 100% task completion, 78.77% deadline satisfaction, 0% re-delegation, and the lowest bandwidth-utilization standard deviation across 20 seeds.
 - **E6:** Proposed ACK+KMM achieves ~6.5% data loss vs. 75% for gossip-only baseline, and sits nearest the origin in the loss–overhead trade-off space.
-- **E7:** The proposed pipeline matches Paillier-fog latency while reducing storage from *n* items to 1. 8/20 windows violate the 500 ms budget (delegation and failure-recovery windows); this is reported honestly.
+- **E7:** The proposed pipeline matches Paillier-fog latency while reducing storage from _n_ items to 1. 8/20 windows violate the 500 ms budget (delegation and failure-recovery windows); this is reported honestly.
 - **E8:** Fog-scoped keys reduce exposure by 60–80% in non-KMM compromise scenarios. KMM compromise exposes all groups in both schemes and is acknowledged as the single trust anchor.
 
 ---
@@ -272,13 +272,13 @@ Runs single-seed (42) checks 1–5 against the E5 specification to confirm corre
 
 Five heterogeneous fog nodes are modelled (`config.py`):
 
-| Node | Class | CPU Cores | RAM | Bandwidth | Sensors |
-|---|---|---|---|---|---|
-| F1 | Strong | 4 | 8 GB | 100 Mbps | 20 |
-| F2 | Medium | 2 | 4 GB | 50 Mbps | 20 |
-| F3 | Weak | 1 | 2 GB | 20 Mbps | 20 |
-| F4 | Medium-Fast | 2 | 4 GB | 80 Mbps | 20 |
-| F5 | Strong | 4 | 8 GB | 100 Mbps | 20 |
+| Node | Class       | CPU Cores | RAM  | Bandwidth | Sensors |
+| ---- | ----------- | --------- | ---- | --------- | ------- |
+| F1   | Strong      | 4         | 8 GB | 100 Mbps  | 20      |
+| F2   | Medium      | 2         | 4 GB | 50 Mbps   | 20      |
+| F3   | Weak        | 1         | 2 GB | 20 Mbps   | 20      |
+| F4   | Medium-Fast | 2         | 4 GB | 80 Mbps   | 20      |
+| F5   | Strong      | 4         | 8 GB | 100 Mbps  | 20      |
 
 Task scheduling uses **Full-CapScore** in E5v2. S1–S6 compare random, round-robin, threshold, fixed CapScore, adaptive CapScore, and proposed Full-CapScore strategies for latency-sensitive (`LS`) and heavy-processing (`HP`) task classes.
 
@@ -300,7 +300,7 @@ For publication-quality IEEE figures, run `scripts/plot_experiments.py` after th
 
 ## Notes & Limitations
 
-- SGX/TEE isolation is **simulated**, not hardware-enforced. All enclave behaviour is a formal assumption.
+- SGX/TEE isolation is **simulated in OP-TEE QEMU**, not hardware-enforced. All enclave behaviour is a formal assumption.
 - Fault detection in E6 uses a **deterministic analytical timing model**, not live distributed fault injection. All comparisons are model-based estimates, not empirical measurements.
 - E8 blast radius is **exposure accounting**, not a cryptographic attack simulation or SGX penetration test. KMM is the single trust anchor — its compromise exposes all groups in both schemes.
 - E5v2 replaces the legacy four-strategy CapacityScore experiment. The archived legacy result reported about 93% deadline satisfaction; the active fixed E5v2 result reports 78.77% for S6 over 20 seeds and uses LS/HP deadlines of 100/500 ms.

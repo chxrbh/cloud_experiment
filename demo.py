@@ -255,7 +255,7 @@ elif section.startswith("🎬"):
     try:
         from config import (
             BASE_WORKLOAD, FOG_NODES, TAU, SCALE,
-            build_schedule, capacity_score,
+            build_schedule, full_cap_score,
         )
         from crypto_sim import aes_key, aes_encrypt, generate_paillier_keypair, sgx_enclave_process
         cfg_ok = True
@@ -295,7 +295,7 @@ elif section.startswith("🎬"):
     def _pick_capacity(candidates: list, task_type: str, wt: dict) -> str | None:
         if not candidates:
             return None
-        return max(candidates, key=lambda nid: capacity_score(nid, wt, task_type))
+        return max(candidates, key=lambda nid: full_cap_score(nid, wt, task_type))
 
     # ── controls ───────────────────────────────────────────────────────────
     ctrl1, ctrl2, ctrl3 = st.columns(3)
@@ -422,7 +422,7 @@ elif section.startswith("🎬"):
 
         # ── capacity scores ────────────────────────────────────────────────
         for nid in NODE_ORDER:
-            score_hist_ls[nid].append(capacity_score(nid, wt_snap, "LS"))
+            score_hist_ls[nid].append(full_cap_score(nid, wt_snap, "LS"))
 
         # ── task assignment (100 tasks per window) ─────────────────────────
         window_assign = {nid: 0 for nid in NODE_ORDER}
@@ -550,7 +550,7 @@ elif section.startswith("🎬"):
 
         # ── capacity score bar chart ───────────────────────────────────────
         current_scores_ls = [score_hist_ls[nid][-1] for nid in NODE_ORDER]
-        current_scores_to = [capacity_score(nid, wt_snap, "TO") for nid in NODE_ORDER]
+        current_scores_to = [full_cap_score(nid, wt_snap, "TO") for nid in NODE_ORDER]
         winner_ls = NODE_ORDER[current_scores_ls.index(max(current_scores_ls))]
         winner_to = NODE_ORDER[current_scores_to.index(max(current_scores_to))]
 

@@ -33,7 +33,6 @@ from config import (
     KMM_PROV_MS,
     SCALE,
     T_ACK_MS,
-    capacity_score,
     full_cap_score,
 )
 from crypto_sim import (
@@ -88,19 +87,6 @@ class P1RepairTests(unittest.TestCase):
         self.assertIn("F1", kmm.delegated["F4"])
         kmm.revoke_key("F1", "F4")
         self.assertNotIn("F1", kmm.delegated["F4"])
-
-    def test_legacy_capacity_score_alias(self) -> None:
-        wt = {
-            "F1": {"workload": 0.20, "latency": 0.30, "queue": 0.20},
-            "F3": {"workload": 0.60, "latency": 0.80, "queue": 0.55},
-            "F4": {"workload": 0.40, "latency": 0.10, "queue": 0.30},
-        }
-        for task_type in ("LS", "HP"):
-            for node_id in wt:
-                self.assertEqual(
-                    capacity_score(node_id, wt, task_type),
-                    full_cap_score(node_id, wt, task_type),
-                )
 
     def test_e1_formulas(self) -> None:
         rows = run_e1(self.pub)

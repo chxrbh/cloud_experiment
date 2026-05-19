@@ -360,12 +360,3 @@ def full_cap_score(
         + w3 * (1.0 - node["queue"])
         + w4 * _compat(node_id, node, tt)
     )
-
-
-def capacity_score(
-    node_id: str,
-    workload_table: dict[str, dict[str, float]],
-    task_type: str,
-) -> float:
-    """Deprecated alias for full_cap_score (S6). Use full_cap_score directly."""
-    return full_cap_score(node_id, workload_table, task_type)

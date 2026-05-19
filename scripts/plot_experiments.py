@@ -29,6 +29,7 @@ import pandas as pd
 from scipy import stats as scipy_stats
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+import plot_style as PS
 from config import (
     CALIBRATION_E2_TOTAL_MS,
     CALIBRATION_FOG_TA_MEAN_MS,
@@ -52,101 +53,27 @@ from config import (
 IEEE_SINGLE = 3.45   # inches, one-column
 IEEE_DOUBLE = 7.16   # inches, two-column
 
-plt.rcParams.update({
-    "font.family": "serif",
-    "font.size": 8,
-    "axes.titlesize": 8,
-    "axes.labelsize": 8,
-    "xtick.labelsize": 7,
-    "ytick.labelsize": 7,
-    "legend.fontsize": 7,
-    "legend.framealpha": 0.85,
-    "legend.edgecolor": "#cccccc",
-    "figure.dpi": 150,
-    "savefig.dpi": 300,
-    "savefig.bbox": "tight",
-    "savefig.pad_inches": 0.02,
-    "lines.linewidth": 1.4,
-    "lines.markersize": 4.5,
-    "axes.spines.top": False,
-    "axes.spines.right": False,
-    "axes.grid": True,
-    "grid.alpha": 0.25,
-    "grid.linewidth": 0.5,
-})
+PS.apply()
 
 # ---------------------------------------------------------------------------
 # Consistent colour / label / marker maps
 # ---------------------------------------------------------------------------
 
 # --- Load-balancing strategies (E5) ---
-E5_ORDER = E5_STRATEGY_NAMES
-E5_LABELS = {key: value.replace(": ", "\n") for key, value in E5_STRATEGY_LABELS.items()}
-E5_COLORS = {
-    "S1": "#d62728",
-    "S2": "#ff7f0e",
-    "S3": "#bcbd22",
-    "S4": "#1f77b4",
-    "S5": "#2ca02c",
-    "S6": "#006400",
-}
+E5_ORDER  = E5_STRATEGY_NAMES
+E5_LABELS = {key: value for key, value in E5_STRATEGY_LABELS.items()}
+E5_COLORS = PS.E5_COLORS
 
 # --- Fault-tolerance methods (E6) ---
-FT_ORDER    = ["b1_gossip", "b2_replication", "checkpoint",
-               "b4_multilayer", "b5_fog_clustering", "proposed_ack_kmm"]
-FT_LABELS   = {
-    "b1_gossip":          "B1 Gossip",
-    "b2_replication":     "B2 Replication",
-    "checkpoint":         "B3 Checkpoint",
-    "b4_multilayer":      "B4 Multilayer",
-    "b5_fog_clustering":  "B5 Fog-Cluster",
-    "proposed_ack_kmm":   "Proposed\n(ACK+KMM)",
-}
-FT_COLORS   = {
-    "b1_gossip":          "#888888",
-    "b2_replication":     "#D62728",
-    "checkpoint":         "#FF7F0E",
-    "b4_multilayer":      "#4878CF",
-    "b5_fog_clustering":  "#9467BD",
-    "proposed_ack_kmm":   "#1B7F4F",
-}
-FT_MARKERS  = {
-    "b1_gossip":          "o",
-    "b2_replication":     "s",
-    "checkpoint":         "^",
-    "b4_multilayer":      "D",
-    "b5_fog_clustering":  "P",
-    "proposed_ack_kmm":   "H",
-}
+FT_ORDER   = PS.FT_ORDER
+FT_LABELS  = PS.FT_LABELS
+FT_COLORS  = PS.FT_COLORS
+FT_MARKERS = PS.FT_MARKERS
 
 # --- Storage / latency baselines (E1, E2, E7) ---
-SL_LABELS   = {
-    "plaintext":              "Plaintext (insecure)",
-    "aes_per_reading":        "AES per reading",
-    "paillier_nobatch":       "Paillier (no batch)",
-    "ours":                   "Proposed (slot agg.)",
-    "cloud_only":             "Cloud-only",
-    "fog_plaintext":          "Fog plaintext",
-    "paillier_fog_convert":   "Paillier fog-convert",
-}
-SL_COLORS   = {
-    "plaintext":              "#AAAAAA",
-    "aes_per_reading":        "#4878CF",
-    "paillier_nobatch":       "#D62728",
-    "ours":                   "#1B7F4F",
-    "cloud_only":             "#AAAAAA",
-    "fog_plaintext":          "#4878CF",
-    "paillier_fog_convert":   "#D62728",
-}
-SL_MARKERS  = {
-    "plaintext":              "s",
-    "aes_per_reading":        "o",
-    "paillier_nobatch":       "^",
-    "ours":                   "D",
-    "cloud_only":             "s",
-    "fog_plaintext":          "o",
-    "paillier_fog_convert":   "^",
-}
+SL_LABELS  = PS.SL_LABELS
+SL_COLORS  = PS.SL_COLORS
+SL_MARKERS = PS.SL_MARKERS
 
 # ---------------------------------------------------------------------------
 # Helper utilities
@@ -212,7 +139,7 @@ def plot_e1_storage(results_dir: Path, figures_dir: Path, generated: list[str]) 
     ax.set_yscale("log")
     ax.set_xlabel("Sensors per fog node $n$")
     ax.set_ylabel("Storage per window (bytes, log)")
-    ax.set_title("(a) Bytes stored per aggregation window")
+    ax.set_title("Bytes stored per aggregation window")
     ax.legend(loc="upper left")
 
     # --- Right: ciphertext count ---
@@ -226,7 +153,7 @@ def plot_e1_storage(results_dir: Path, figures_dir: Path, generated: list[str]) 
              linewidth=2.2, zorder=5)
     ax2.set_xlabel("Sensors per fog node $n$")
     ax2.set_ylabel("Ciphertexts per window")
-    ax2.set_title("(b) Ciphertext count per window")
+    ax2.set_title("Ciphertext count per window")
     ax2.legend(loc="upper left")
 
     fig.suptitle("E1 — Storage Reduction via Paillier Slot Aggregation", fontsize=9, fontweight="bold")
@@ -269,11 +196,11 @@ def plot_e2_latency(results_dir: Path, figures_dir: Path, generated: list[str]) 
     ax.errorbar(n_vals, ours_arr,
                 marker=SL_MARKERS["ours"], color=SL_COLORS["ours"],
                 label="Proposed", linewidth=2.2, zorder=5, capsize=2)
-    ax.axhline(WINDOW_MS, color="crimson", linestyle="--", linewidth=1.0,
+    ax.axhline(WINDOW_MS, color=PS.DEADLINE_COLOR, linestyle="--", linewidth=1.0,
                label=f"{WINDOW_MS:.0f} ms deadline", zorder=6)
     ax.set_xlabel("Sensors per fog node $n$")
     ax.set_ylabel("Median window latency (ms, log)")
-    ax.set_title("(a) Aggregation latency vs $n$")
+    ax.set_title("Aggregation latency vs $n$")
     ax.set_yscale("log")
     ax.legend(loc="upper left", fontsize=6.5)
     warn.append("NOTE: Proposed E2 latency uses the calibrated 2048-bit host-reference benchmark; "
@@ -285,15 +212,16 @@ def plot_e2_latency(results_dir: Path, figures_dir: Path, generated: list[str]) 
     node_meds = [ours_total * FOG_NODES[nid]["speed_factor"] for nid in node_ids]
     node_colors = [SL_COLORS["ours"], SL_COLORS["paillier_nobatch"], SL_COLORS["aes_per_reading"]]
     bars = ax2.bar(node_ids, node_meds, color=node_colors, width=0.45, edgecolor="white", linewidth=0.4, zorder=3)
-    ax2.axhline(WINDOW_MS, color="crimson", linestyle="--", linewidth=1.0,
+    ax2.axhline(WINDOW_MS, color=PS.DEADLINE_COLOR, linestyle="--", linewidth=1.0,
                 label=f"{WINDOW_MS:.0f} ms deadline")
     for bar, nid, med in zip(bars, node_ids, node_meds):
         ax2.text(bar.get_x() + bar.get_width() / 2, med + 10,
                  f"{med:.0f} ms", ha="center", va="bottom", fontsize=7)
+    ax2.set_xticks(range(len(node_ids)))
     ax2.set_xticklabels(
         [f"{nid}\n({FOG_NODES[nid]['class']})" for nid in node_ids], fontsize=6.5)
     ax2.set_ylabel("Estimated latency (ms)")
-    ax2.set_title("(b) Node heterogeneity\n(n=100, calibrated)")
+    ax2.set_title("Node heterogeneity\n(n=100, calibrated)")
     ax2.legend(fontsize=6.5)
     ax2.set_ylim(bottom=0)
 
@@ -305,22 +233,22 @@ def plot_e2_latency(results_dir: Path, figures_dir: Path, generated: list[str]) 
     w = 0.55
     bottom = np.zeros(2)
     components = [
-        (np.array([enc_ms, enc_ms]),          "#1B7F4F", "Enclave AES→Paillier"),
-        (np.array([kmm_ms, kmm_ms]),          "#4878CF", "KMM combine"),
-        (np.array([storage_ms, storage_ms]),  "#9467BD", "Storage prep"),
-        (np.array([0.0, deleg]),              "#D62728", "KMM provisioning"),
+        (np.array([enc_ms, enc_ms]),          PS.C["yours"],    "Enclave AES→Paillier"),
+        (np.array([kmm_ms, kmm_ms]),          PS.C["aes"],      "KMM combine"),
+        (np.array([storage_ms, storage_ms]),  PS.C["rr"],       "Storage prep"),
+        (np.array([0.0, deleg]),              PS.C["paillier"], "KMM provisioning"),
     ]
     for vals, color, lbl in components:
         ax3.bar(x, vals, w, bottom=bottom, color=color, label=lbl, edgecolor="white", linewidth=0.4)
         bottom += vals
-    ax3.axhline(WINDOW_MS, color="crimson", linestyle="--", linewidth=1.0,
+    ax3.axhline(WINDOW_MS, color=PS.DEADLINE_COLOR, linestyle="--", linewidth=1.0,
                 label=f"{WINDOW_MS:.0f} ms deadline")
     for xi, total in enumerate(bottom):
         ax3.text(xi, total + 20, f"{total:.0f} ms", ha="center", va="bottom", fontsize=7)
     ax3.set_xticks(x)
     ax3.set_xticklabels(categories)
     ax3.set_ylabel("Latency (ms)")
-    ax3.set_title("(c) Proposed breakdown (n=100)")
+    ax3.set_title("Proposed breakdown (n=100)")
     ax3.legend(loc="upper left", fontsize=6)
 
     fig.suptitle("E2 — Aggregation Latency: Calibrated 2048-bit Reference", fontsize=9, fontweight="bold")
@@ -378,7 +306,7 @@ def plot_e3b_multisource(results_dir: Path, figures_dir: Path, generated: list[s
                alpha=0.8, label="100 % target", zorder=4)
     ax.set_ylim(95, 101.5)
     ax.set_ylabel("Scaled-sum correctness (%)")
-    ax.set_title("(a) Multi-source arithmetic correctness")
+    ax.set_title("Multi-source arithmetic correctness")
     ax.legend()
     ax.text(bar[0].get_x() + bar[0].get_width() / 2,
             accuracy + 0.1, f"{accuracy:.0f}%",
@@ -405,7 +333,7 @@ def plot_e3b_multisource(results_dir: Path, figures_dir: Path, generated: list[s
             cell.set_text_props(color="white", fontweight="bold")
         elif r_idx % 2 == 0:
             cell.set_facecolor("#f0faf6")
-    ax2.set_title("(b) E3b results summary", pad=8)
+    ax2.set_title("E3b results summary", pad=8)
 
     fig.suptitle("E3b — Multi-Source Slot Protocol Correctness (F1+F2 → F4)",
                  fontsize=9, fontweight="bold")
@@ -428,7 +356,7 @@ def plot_e4_kmm(results_dir: Path, figures_dir: Path, generated: list[str]) -> l
     ax.errorbar(k, combine_ms,
                 marker="D", color=SL_COLORS["ours"],
                 linewidth=2.0, capsize=3, zorder=5, label="KMM combine latency")
-    ax.axhline(WINDOW_MS, color="crimson", linestyle="--", linewidth=1.0,
+    ax.axhline(WINDOW_MS, color=PS.DEADLINE_COLOR, linestyle="--", linewidth=1.0,
                label=f"{WINDOW_MS:.0f} ms deadline")
     ax.set_xlabel("Fog aggregates combined $k$")
     ax.set_ylabel("KMM combine latency (ms)")
@@ -464,7 +392,7 @@ def plot_e5_lb(results_dir: Path, figures_dir: Path, generated: list[str]) -> li
         ax.bar(x, vals, w, color=colors, edgecolor="white",
                linewidth=0.4, zorder=3,
                yerr=errs, error_kw=dict(elinewidth=0.9, capsize=2.5, ecolor="black"))
-        ax.set_xticks(x); ax.set_xticklabels(labels, fontsize=6.5)
+        ax.set_xticks(x); ax.set_xticklabels(labels, fontsize=6.5, rotation=45, ha="right")
         ax.set_ylabel(ylabel)
         ax.set_title(title, pad=3)
         ax.yaxis.grid(True, alpha=0.25); ax.set_axisbelow(True)
@@ -478,7 +406,7 @@ def plot_e5_lb(results_dir: Path, figures_dir: Path, generated: list[str]) -> li
            [_agg_val("completion_rate_mean", s) * 100.0 for s in strategies],
            [_agg_val("completion_rate_ci95", s) * 100.0 for s in strategies],
            "Task completion rate (%)",
-           "(a) Completion rate\n(higher = better)")
+           "Completion rate\n(higher = better)")
     axes[0, 0].set_ylim(95, 102)
 
     # (b) deadline satisfaction
@@ -486,7 +414,7 @@ def plot_e5_lb(results_dir: Path, figures_dir: Path, generated: list[str]) -> li
            [_agg_val("deadline_rate_mean", s) * 100.0 for s in strategies],
            [_agg_val("deadline_rate_ci95", s) * 100.0 for s in strategies],
            "Deadline satisfaction (%)",
-           "(b) Deadline satisfaction\n(higher = better)")
+           "Deadline satisfaction\n(higher = better)")
     axes[0, 1].set_ylim(58, 83)
 
     # (c) workload std deviation
@@ -494,7 +422,7 @@ def plot_e5_lb(results_dir: Path, figures_dir: Path, generated: list[str]) -> li
            [_agg_val("workload_std_mean_mean", s) for s in strategies],
            [_agg_val("workload_std_mean_ci95", s) for s in strategies],
            "Workload std deviation",
-           "(c) Workload balance\n(lower = better)",
+           "Workload balance\n(lower = better)",
            lower_better=True)
 
     # (d) delegation rate
@@ -502,7 +430,7 @@ def plot_e5_lb(results_dir: Path, figures_dir: Path, generated: list[str]) -> li
            [_agg_val("delegation_rate_mean", s) * 100.0 for s in strategies],
            [_agg_val("delegation_rate_ci95", s) * 100.0 for s in strategies],
            "Delegation rate (%)",
-           "(d) Delegation rate\n(lower = better)",
+           "Delegation rate\n(lower = better)",
            lower_better=True)
 
     # (e) waiting time
@@ -510,7 +438,7 @@ def plot_e5_lb(results_dir: Path, figures_dir: Path, generated: list[str]) -> li
            [_agg_val("t_wait_mean_mean", s) for s in strategies],
            [_agg_val("t_wait_mean_ci95", s) for s in strategies],
            "Mean waiting time (ms)",
-           "(e) Waiting time\n(lower = better)",
+           "Waiting time\n(lower = better)",
            lower_better=True)
 
     # (f) bandwidth utilization variance
@@ -518,7 +446,7 @@ def plot_e5_lb(results_dir: Path, figures_dir: Path, generated: list[str]) -> li
            [_agg_val("sigma_bw_mean_mean", s) for s in strategies],
            [_agg_val("sigma_bw_mean_ci95", s) for s in strategies],
            "sigma BW",
-           "(f) Bandwidth-utilization std\n(lower = better)",
+           "Bandwidth-utilization std\n(lower = better)",
            lower_better=True)
 
     # Shared legend below the figure
@@ -689,10 +617,10 @@ def plot_e6_tradeoff(results_dir: Path, figures_dir: Path, generated: list[str])
     ax.set_xlabel("Mean message overhead factor")
     ax.set_ylabel("Mean data loss rate (%)")
     ax.set_title("E6 — Fault Recovery Trade-off\n"
-                 "(bubble area ∝ recovery latency; lower-left = better)")
+                 r"(bubble area $\propto$ recovery latency; lower-left = better)")
     ax.set_xlim(0.95, 2.10)
     ax.set_ylim(-3, 82)
-    ax.text(2.08, 78, "Bubble area ∝ recovery latency",
+    ax.text(2.08, 78, r"Bubble area $\propto$ recovery latency",
             fontsize=6, color="#666666", ha="right")
 
     fig.tight_layout()
@@ -742,7 +670,7 @@ def plot_e6_overhead(results_dir: Path, figures_dir: Path, generated: list[str])
     ax.set_xticks(x_center)
     ax.set_xticklabels([scen_labels[s] for s in scenarios])
     ax.set_ylabel("Recovery latency (ms)")
-    ax.set_title("(a) Recovery latency by method\n(lower = better; 95% CI bars)")
+    ax.set_title("Recovery latency by method\n(lower = better; 95% CI bars)")
     ax.set_ylim(bottom=0)
     ax.yaxis.grid(True, alpha=0.25)
     ax.set_axisbelow(True)
@@ -754,13 +682,13 @@ def plot_e6_overhead(results_dir: Path, figures_dir: Path, generated: list[str])
     w2 = 0.32
     msg_means  = [df[df["method"] == m]["message_overhead"].mean() for m in methods]
     cmp_means  = [df[df["method"] == m]["compute_overhead"].mean() for m in methods]
-    ax2.bar(x2 - w2 / 2, msg_means, w2, color="#4878CF", label="Message overhead", edgecolor="white", linewidth=0.4)
-    ax2.bar(x2 + w2 / 2, cmp_means, w2, color="#D62728", label="Compute overhead", edgecolor="white", linewidth=0.4)
+    ax2.bar(x2 - w2 / 2, msg_means, w2, color=PS.C["aes"],      label="Message overhead", edgecolor="white", linewidth=0.4)
+    ax2.bar(x2 + w2 / 2, cmp_means, w2, color=PS.C["paillier"], label="Compute overhead", edgecolor="white", linewidth=0.4)
     ax2.axhline(1.0, color="black", linestyle="--", linewidth=0.9, alpha=0.5, label="Baseline (×1)")
     ax2.set_xticks(x2)
     ax2.set_xticklabels(method_labels_short, fontsize=6, rotation=12, ha="right")
     ax2.set_ylabel("Mean overhead factor")
-    ax2.set_title("(b) Overhead by method\n(message vs compute)")
+    ax2.set_title("Overhead by method\n(message vs compute)")
     ax2.legend(fontsize=6.5)
     ax2.yaxis.grid(True, alpha=0.25)
     ax2.set_axisbelow(True)
@@ -800,7 +728,7 @@ def plot_e7_pipeline(results_dir: Path, figures_dir: Path, generated: list[str])
     x  = np.arange(len(method_order))
     w  = 0.55
     bars = ax.bar(x, totals, w, color=method_colors, edgecolor="white", linewidth=0.4, zorder=3)
-    ax.axhline(WINDOW_MS, color="crimson", linestyle="--", linewidth=1.0,
+    ax.axhline(WINDOW_MS, color=PS.DEADLINE_COLOR, linestyle="--", linewidth=1.0,
                label=f"{WINDOW_MS:.0f} ms window budget")
     for bar, val, comp, n_win in zip(bars, totals, compliant,
                                       [20] * len(method_order)):
@@ -813,7 +741,7 @@ def plot_e7_pipeline(results_dir: Path, figures_dir: Path, generated: list[str])
     ax.set_xticks(x)
     ax.set_xticklabels(method_labels, fontsize=6.5, rotation=10, ha="right")
     ax.set_ylabel("Median end-to-end latency (ms)")
-    ax.set_title("(a) Pipeline latency per window")
+    ax.set_title("Pipeline latency per window")
     ax.legend(fontsize=6.5)
     ax.set_ylim(-60, 550)
     ax.yaxis.grid(True, alpha=0.25); ax.set_axisbelow(True)
@@ -832,7 +760,7 @@ def plot_e7_pipeline(results_dir: Path, figures_dir: Path, generated: list[str])
     ax2.set_xticks(x)
     ax2.set_xticklabels(method_labels, fontsize=6.5, rotation=10, ha="right")
     ax2.set_ylabel("Storage items per window (log)")
-    ax2.set_title("(b) Cloud storage footprint\n(items per window)")
+    ax2.set_title("Cloud storage footprint\n(items per window)")
     ax2.yaxis.grid(True, alpha=0.25, which="both"); ax2.set_axisbelow(True)
     for bar, val in zip(bars2, storage):
         ax2.text(bar.get_x() + bar.get_width() / 2,
@@ -866,9 +794,9 @@ def plot_e8_blast_radius(results_dir: Path, figures_dir: Path, generated: list[s
 
     fig, ax = plt.subplots(figsize=(IEEE_SINGLE + 0.5, 2.6))
     r1 = ax.bar(x - w / 2, df["global_key_exposed_pct"],  w,
-                color="#D62728", label="Global-key scheme", edgecolor="white", linewidth=0.4)
+                color=PS.C["paillier"], label="Global-key scheme", edgecolor="white", linewidth=0.4)
     r2 = ax.bar(x + w / 2, df["fog_scoped_exposed_pct"],  w,
-                color="#1B7F4F", label="Proposed (fog-scoped)", edgecolor="white", linewidth=0.4)
+                color=PS.C["yours"],   label="Proposed (fog-scoped)", edgecolor="white", linewidth=0.4)
 
     ax.set_xticks(x)
     ax.set_xticklabels([scen_display.get(s, s) for s in scenarios], fontsize=7)
@@ -957,12 +885,12 @@ def plot_summary_radar(results_dir: Path, figures_dir: Path, generated: list[str
 
     fig, ax = plt.subplots(figsize=(IEEE_SINGLE + 0.2, 3.0),
                            subplot_kw=dict(polar=True))
-    ax.plot(angles, proposed_vals,  color="#1B7F4F", linewidth=1.8, marker="D",
+    ax.plot(angles, proposed_vals,  color=PS.C["yours"], linewidth=1.8, marker="D",
             markersize=5, label="Proposed")
-    ax.fill(angles, proposed_vals,  color="#1B7F4F", alpha=0.18)
-    ax.plot(angles, best_alt_vals,  color="#888888", linewidth=1.2, linestyle="--",
+    ax.fill(angles, proposed_vals,  color=PS.C["yours"], alpha=0.18)
+    ax.plot(angles, best_alt_vals,  color=PS.C["plain"], linewidth=1.2, linestyle="--",
             marker="o", markersize=4, label="Best alternative per metric")
-    ax.fill(angles, best_alt_vals,  color="#888888", alpha=0.10)
+    ax.fill(angles, best_alt_vals,  color=PS.C["plain"], alpha=0.10)
 
     ax.set_xticks(angles[:-1])
     ax.set_xticklabels(categories, fontsize=6.5)

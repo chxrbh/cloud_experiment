@@ -44,10 +44,7 @@ from crypto_sim import (
     sgx_enclave_process,
     sgx_enclave_storage_prep,
 )
-
-
-def _readings(n: int, rng: random.Random) -> list[float]:
-    return [round(rng.uniform(0, 150), 4) for _ in range(n)]
+from util import _readings
 
 
 def run_e3b(

@@ -5,48 +5,12 @@ from __future__ import annotations
 import argparse
 import os
 import random
-import sys
-import time
 
 from config import DEFAULT_KEY_BITS, DEFAULT_SEED, E4_K_VALUES, E4_REPS, E6_FAILURE_SCENARIOS, E6_METHODS, E6_SEEDS, RESULTS_DIR
 from crypto_sim import generate_fog_keys, generate_paillier_keypair, paillier_backend_name, paillier_ciphertext_bytes
 from experiments_p2 import run_e3b, run_e4, run_e6
 from results import ensure_results_dir, metadata_rows, validate_p2_results, write_csv, write_p2_summary
-
-
-class ProgressBar:
-    def __init__(self, total: int, label: str, enabled: bool = True) -> None:
-        self.total = max(total, 1)
-        self.label = label
-        self.enabled = enabled
-        self.current = 0
-        self.started = time.perf_counter()
-        self.last_message = ""
-
-    def step(self, message: str = "") -> None:
-        self.current += 1
-        self.last_message = message
-        self.render()
-
-    def render(self, final: bool = False) -> None:
-        if not self.enabled:
-            return
-        done = self.total if final else min(self.current, self.total)
-        width = 32
-        filled = int(width * done / self.total)
-        bar = "#" * filled + "-" * (width - filled)
-        elapsed = time.perf_counter() - self.started
-        suffix = f" | {self.last_message}" if self.last_message else ""
-        sys.stdout.write(f"\r{self.label} [{bar}] {done}/{self.total} {done / self.total * 100:5.1f}% {elapsed:6.1f}s{suffix}")
-        sys.stdout.flush()
-        if final or done >= self.total:
-            sys.stdout.write("\n")
-
-    def finish(self) -> None:
-        if self.current >= self.total:
-            return
-        self.current = self.total
-        self.render(final=True)
+from util import ProgressBar
 
 
 def parse_args() -> argparse.Namespace:
