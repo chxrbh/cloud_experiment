@@ -966,7 +966,7 @@ own sealed fog-scoped key.
     \subsection{Fault Tolerance and Security}
     \label{sec:eval-ft-sec}
 
-    \textbf{Fault recovery (E6).} An analytical reading-loss model is evaluated over 30 seeds under three failure timings: failure at $t=0$~ms, 250~ms, and 450~ms within a 2000~ms observation window (400 total readings). Five baselines are compared (Table~\ref{tab:e6-baselines}): B1 gossip-only, B2 replication~\cite{liu2024replica}, B3 checkpoint/recovery~\cite{shahab2025sfc}, B4 multilayer detection~\cite{lee2022multilayer}, and B5 fog-clustering~\cite{mohammadi2023}. The proposed ACK+KMM method uses $T_{ack}=100\,\text{ms}$ plus $T_{KMM}=50\,\text{ms}$ provisioning, yielding 150~ms recovery latency.
+    \textbf{Fault recovery (E6).} An analytical reading-loss model is evaluated over 30 seeds under three failure timings: failure at $t=0$~ms, 250~ms, and 450~ms within a 2000~ms observation window (400 total readings). Five baselines are compared (Table~\ref{tab:e6-baselines}): B1 gossip-only, B2 replication~\cite{liu2024replica}, B3 checkpoint sub-mechanism (derived from the RPC policy in~\cite{shahab2025sfc}), B4 multilayer detection~\cite{lee2022multilayer}, and B5 fog-clustering~\cite{mohammadi2023}. The proposed ACK+KMM method uses $T_{ack}=100\,\text{ms}$ plus $T_{KMM}=50\,\text{ms}$ provisioning, yielding 150~ms recovery latency.
 
     \begin{table}[htbp]
     \centering
@@ -978,7 +978,7 @@ own sealed fog-scoped key.
     \midrule
     B1 & Gossip-only: failure detected after $rT_g=1500\,\text{ms}$; readings in outage window lost. \\
     B2 & Replication~\cite{liu2024replica}: each reading sent to primary and backup; zero loss, $2\times$ message cost. \\
-    B3 & Checkpoint~\cite{shahab2025sfc}: 500~ms checkpoint interval; readings after latest checkpoint lost until restore. \\
+    B3 & Checkpoint~\cite{shahab2025sfc} (checkpointing sub-mechanism of RPC isolated for comparison; 500~ms interval): readings after latest checkpoint lost until restore. \\
     B4 & Multilayer detection~\cite{lee2022multilayer}: sensor/fog/KMM detectors; earliest layer result used. \\
     B5 & Clustering~\cite{mohammadi2023}: coordinator detects failure and reroutes subsequent readings. \\
     \bottomrule
