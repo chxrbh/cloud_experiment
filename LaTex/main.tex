@@ -919,23 +919,7 @@ $compat_{LS}, compat_{HP}, timestamp\}$ every $T_g$}
     Paillier slot aggregation reduces this to $O(1)$ without sacrificing
     encrypted computation.
 
-    \textbf{Slot protocol correctness --- single-source (E3a).} The slot protocol was verified over 100 independent trials at delegation counts $k\in\{1,5,10,20,50\}$ under single-source delegation ($F_1\to F_4$). All trials produced zero scaled-integer arithmetic error across all values of $k$. A residual quantization deviation of $\approx$0.045 (median) is inherent to fixed-point Paillier encoding with $scale=1000$ and is consistent across all delegation counts (Fig.~\ref{fig:e3a-correctness}).
-
-    \begin{figure}[htbp]
-    \centering
-    \includegraphics[width=1.0\linewidth]{../figures/exp3a_correctness.pdf}
-    \caption{E3a slot protocol correctness under single-source delegation ($F_1\to F_4$) over 100 trials at five delegation counts $k$. All trials achieve zero scaled-integer error; the residual is fixed-point quantization noise.}
-    \label{fig:e3a-correctness}
-    \end{figure}
-
-    \textbf{Slot protocol correctness --- multi-source (E3b).} The protocol was further verified under simultaneous dual-source delegation ($F_1,F_2\to F_4$), with each source delegating 5 readings from a pool of 30 and the backup node holding 30 own readings (90 sensors total). Over 100 trials, all produced zero scaled-integer arithmetic error. The median quantization deviation was $\approx$0.041, consistent with E3a, confirming that zero-fill correctness extends to concurrent multi-source delegation (Fig.~\ref{fig:e3b-multisource}).
-
-    \begin{figure}[htbp]
-    \centering
-    \includegraphics[width=1.0\linewidth]{../figures/exp3b_multisource.pdf}
-    \caption{E3b slot protocol correctness under simultaneous dual-source delegation ($F_1,F_2\to F_4$) over 100 trials. Zero scaled-integer error is maintained across all trials; quantization deviation is consistent with E3a.}
-    \label{fig:e3b-multisource}
-    \end{figure}
+    \textbf{Slot protocol correctness (E3a--E3b).} The slot protocol was verified over 100 independent trials under both single-source delegation ($F_1\to F_4$, $k\in\{1,5,10,20,50\}$) and simultaneous dual-source delegation ($F_1,F_2\to F_4$, each source delegating 5 readings from a pool of 30, backup node holding 30 own readings; 90 sensors total). All 200 trials produced zero scaled-integer arithmetic error. The residual quantization deviation of $\approx$0.045 (median, single-source) and $\approx$0.041 (dual-source) is fixed-point noise inherent to $scale=1000$ Paillier encoding, independent of $k$ and delegation source count, confirming that zero-fill correctness extends to concurrent multi-source delegation.
 
     \textbf{KMM combine overhead (E4).} The KMM window-combine latency was measured at $k\in\{1,2,5,10,20,50,100\}$ fog aggregates. As shown in Fig.~\ref{fig:e4-kmm}, the combine latency remains constant at $1.474$~ms across all values of $k$, confirming that the KMM combine step is negligible relative to the 500~ms aggregation window even as the number of fog nodes scales to 100. This is consistent with the E2 pipeline breakdown, where the KMM combine contributes only $1.474$~ms of the total $444.128$~ms.
 
