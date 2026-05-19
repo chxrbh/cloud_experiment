@@ -114,7 +114,7 @@ This section reviews existing literature across three areas: (A) load balancing 
 
 \subsection{Load Balancing in Fog Computing}
 
-Load balancing in fog computing is concerned with distributing incoming workloads efficiently across available nodes to prevent bottlenecks and maximise resource utilisation~\cite{kashani2020}. The challenge is compounded by the heterogeneous capacity of fog nodes which differ in CPU, memory, and network bandwidth and by the diversity of IIoT task types, which impose widely varying computational demands. Recent surveys identify three dominant strategy families: centralised scheduling, decentralised peer-to-peer coordination, and gossip-based dissemination~\cite{vijarania2025,nemati2024}.
+Load balancing in fog computing is concerned with distributing incoming workloads efficiently across available nodes to prevent bottlenecks and maximise resource utilisation~\cite{kashani2023}. The challenge is compounded by the heterogeneous capacity of fog nodes which differ in CPU, memory, and network bandwidth and by the diversity of IIoT task types, which impose widely varying computational demands. Recent surveys identify three dominant strategy families: centralised scheduling, decentralised peer-to-peer coordination, and gossip-based dissemination~\cite{vijarania2025,nemati2024}.
 
 \subsubsection{Optimisation-Based Approaches}
 
@@ -462,8 +462,9 @@ own sealed fog-scoped key.
     \caption{Three-Layer Fault Handling Hierarchy}
     \label{table:fault-hierarchy}
     \centering
-    \resizebox{\textwidth}{!}{
-    \begin{tabular}{llllll}
+    \setlength{\tabcolsep}{3pt}
+    \renewcommand{\arraystretch}{1.15}
+    \begin{tabular}{@{}c>{\raggedright\arraybackslash}p{0.19\textwidth}>{\raggedright\arraybackslash}p{0.12\textwidth}>{\raggedright\arraybackslash}p{0.16\textwidth}>{\raggedright\arraybackslash}p{0.10\textwidth}>{\raggedright\arraybackslash}p{0.31\textwidth}@{}}
     \hline
     \textbf{Layer} & \textbf{Trigger} & \textbf{Who acts} & \textbf{Detection time} & \textbf{Data loss} & \textbf{Mechanism} \\
     \hline
@@ -471,7 +472,7 @@ own sealed fog-scoped key.
     2 & No ACK within $T_{ack}$ & Sensor and KMM & $T_{ack}+T_{KMM}\approx150\,ms$ & $\approx 150\,ms$ & Sensor notifies KMM, KMM provisions $k_{fogA}$ to Enclave~B, sensor retransmits $C_i^{AES}$ \\
     3 & $r=3$ missed gossip rounds & Fog neighbors and KMM & $rT_g=1.5\,s$ & $\approx 1.5\,s$ fallback & Neighbor detection and KMM reassignment \\
     \hline
-    \end{tabular}}
+    \end{tabular}
     \end{table*}
 
     \paragraph{Interaction with the Paillier slot protocol.}
@@ -520,8 +521,10 @@ own sealed fog-scoped key.
     \caption{Compromise Blast Radius Across Key-Provisioning Designs}
     \label{table:trust-model}
     \centering
-    \resizebox{\textwidth}{!}{
-    \begin{tabular}{lllll}
+    \begingroup
+    \setlength{\tabcolsep}{3pt}
+    \renewcommand{\arraystretch}{1.15}
+    \begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.18\textwidth}>{\raggedright\arraybackslash}p{0.12\textwidth}>{\raggedright\arraybackslash}p{0.12\textwidth}>{\raggedright\arraybackslash}p{0.17\textwidth}>{\raggedright\arraybackslash}p{0.33\textwidth}@{}}
     \hline
     \textbf{Compromise scenario} & \textbf{Global AES key} & \textbf{All-at-init keys} & \textbf{Fog-scoped $k_{fogI}$} & \textbf{Reason} \\
     \hline
@@ -531,7 +534,8 @@ own sealed fog-scoped key.
     Network eavesdropping & None & None & None & Transmissions remain AES-, Paillier-, or attested-channel protected \\
     Fog B compromised during delegation & All sensors & All sensors & Fog A and Fog B groups only & KMM provisions only $k_{fogA}$ to Enclave~B \\
     \hline
-    \end{tabular}}
+    \end{tabular}
+    \endgroup
     \end{table*}
 
     The Key Management Module is the system trust anchor. It is assumed to be deployed in a hardened, high-availability environment separate from fog infrastructure. Compromise of the KMM exposes all fog-scoped keys. Compromise of a single fog node's TEE enclave, which requires physical hardware attack beyond the standard honest-but-curious fog-host threat model, exposes only that node's assigned sensor group's decryption key for the current delegation epoch. Historical data already stored as AES ciphertexts in the cloud remains protected by $k_{store}$, held exclusively in the KMM's storage-preparation enclave.
@@ -649,15 +653,18 @@ own sealed fog-scoped key.
     \caption{Task Classification Based on Delay Requirement}
     \label{table:task-classification}
     \centering
-    \resizebox{1.0\linewidth}{!}{
-    \begin{tabular}{lll}
+    \begingroup
+    \setlength{\tabcolsep}{3pt}
+    \renewcommand{\arraystretch}{1.15}
+    \begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.28\linewidth}>{\raggedright\arraybackslash}p{0.25\linewidth}>{\raggedright\arraybackslash}p{0.37\linewidth}@{}}
     \hline
     \textbf{Task Type} & \textbf{Condition} & \textbf{Example Applications} \\
     \hline
     Latency-Sensitive & $max\_delay \leq 100\,ms$ & Real-time health monitoring, industrial control systems \\
     Heavy Processing & $max\_delay > 100\,ms$ & Video frame analysis, compression tasks \\
     \hline
-    \end{tabular}}
+    \end{tabular}
+    \endgroup
     \end{table}
 
     Once the task type is determined, the fog node selects the corresponding weight configuration for the CapacityScore computation:
@@ -770,7 +777,8 @@ own sealed fog-scoped key.
 \ENSURE Cloud stores $C_{data}$
 
 \STATE Each fog node computes $compat_{LS}$ and $compat_{HP}$ locally from live $\widehat{CPU}$, $\widehat{RAM}$, $\widehat{BW}$
-\STATE Each fog node gossips $\{workload,queue,latency,\phi,compat_{LS},compat_{HP},timestamp\}$ every $T_g$
+\STATE \parbox[t]{0.88\linewidth}{Each fog node gossips $\{workload, queue, latency, \phi,$\\
+$compat_{LS}, compat_{HP}, timestamp\}$ every $T_g$}
 \STATE Update $LastKnownWorkload$, $LastKnownQueue$, $LastKnownLatency$, $LastKnownCompatLS$, and $LastKnownCompatHP$
 
 \IF{$miss_{gossip}(F_A)\geq r$}
@@ -782,14 +790,16 @@ own sealed fog-scoped key.
     \IF{$\mathcal{C}=\emptyset$}
         \STATE $\mathcal{C}\leftarrow \{F_j:F_j\neq F_A,\;F_j\ \text{available}\}$
     \ENDIF
-    \STATE $F_{target}\leftarrow \arg\max_{F_j\in\mathcal{C}} LastKnownCapacityScore_{LS}(F_j)$
+    \STATE \parbox[t]{0.88\linewidth}{$F_{target}\leftarrow \arg\max_{F_j\in\mathcal{C}}$\\
+    $LastKnownCapacityScore_{LS}(F_j)$}
     \STATE Mark $F_A$ unavailable and redirect its remaining sensors to $F_{target}$
     \STATE KMM provisions $sealed\_kFogA@F_{target}$ to $Enclave_{F_{target}}$
     \STATE KMM updates affected $slot\_map$ entries
 \ENDIF
 
 \IF{sensor $s$ misses ACK from $F_A$ within $T_{ack}$}
-    \STATE $F_{backup}\leftarrow \arg\max_{F_j\neq F_A} LocalGossipCapScore(F_j)$
+    \STATE \parbox[t]{0.88\linewidth}{$F_{backup}\leftarrow \arg\max_{F_j\neq F_A}$\\
+    $LocalGossipCapScore(F_j)$}
     \STATE Sensor notifies KMM and retransmits $C_i^{AES}$ to $F_{backup}$
     \STATE KMM provisions $sealed\_kFogA@F_{backup}$ to $Enclave_{F_{backup}}$
     \STATE $Enclave_{F_{backup}}$ decrypts $C_i^{AES}$, converts it to $C_i^P$, and updates $C_{agg,F_{backup}}$
