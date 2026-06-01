@@ -166,7 +166,7 @@ Practical IIoT systems increasingly combine symmetric, asymmetric, and homomorph
 
 The proposed framework replaces the PRE delegation layer with a Trusted Execution Environment (TEE) channel implemented via Intel SGX enclaves and a Key Management Module. This eliminates the need for the intermediate node to hold re-encryption key material in host memory, bounding the blast radius of fog node compromise to a single fog-scoped key group. This design follows the direction identified by recent surveys on secure fog computing, which emphasise hardware-rooted trust as the emerging approach for overcoming the limitations of software-only delegation schemes~\cite{nemati2024,kumar2023}.
 
-    \section{Preliminaries}
+    \section{System Model and Proposed Scheme}
     \subsection{System Architecture}
     \label{sec:arch}
     \begin{figure}[htbp]
@@ -209,7 +209,7 @@ The proposed framework replaces the PRE delegation layer with a Trusted Executio
 
     The model does not address denial-of-service attacks on the physical infrastructure.
 
-    \section{Our Proposed Scheme}
+    \subsection{Proposed Scheme}
     The proposed scheme is organized into seven phases. The notations used in this paper are defined in Table~\ref{table:notation}.
 
     \begin{table*}[htbp]
